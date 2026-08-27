@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="vim을 기본 편집기로 쓰는 git 커밋 메시지 작성 워크플로를 배웁니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>git 커밋 메시지 작성 | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+.prose[data-astro-cid-qd5js4va]{max-width:72ch}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container" data-astro-cid-qd5js4va> <div class="detail-header" data-entry-id="08-git-commit-message"> <div class="crumb">08번</div> <div class="detail-meta"> <div data-sw-badge="true" class="inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 focus-visible:border-outline focus-visible:ring-outline/50 border px-3 py-0.5 text-sm [&amp;_svg:not([class*='size-'])]:size-4 border-primary text-primary" data-slot="badge"> 입문 </div> </div> <h1>git 커밋 메시지 작성</h1> <p class="detail-summary">vim을 기본 편집기로 쓰는 git 커밋 메시지 작성 워크플로를 배웁니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose" data-astro-cid-qd5js4va> <h2 id="상황">상황</h2>
+<p><code>git commit</code>을 실행하면 vim이 열려 커밋 메시지를 입력하게 됩니다. 처음 보면 당황하지만 몇 가지 규칙만 알면 됩니다.</p>
+<h2 id="기본-흐름">기본 흐름</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ git commit</span></span></code></pre>
+<ol>
+<li>vim이 열리고 <code>#</code>로 시작하는 주석(스테이지 목록)이 보입니다.</li>
+<li>맨 위에 메시지를 입력합니다.</li>
+<li><code>:wq</code>로 저장 종료하면 커밋이 완료됩니다.</li>
+</ol>
+<h2 id="규칙">규칙</h2>
+<ul>
+<li>첫 번째 줄: 변경 요약 (50자 이내 권장)</li>
+<li>빈 줄</li>
+<li>본문: 무엇을/왜 바꿨는지</li>
+<li><code>#</code> 주석은 저장해도 커밋에 포함되지 않습니다.</li>
+</ul>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>fix(auth): 로그인 실패 시 에러 메시지 표시</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>세션 만료 시 401이 발생하는데 이를 감지해</span></span>
+<span class="line"><span>다시 로그인하도록 유도합니다.</span></span></code></pre>
+<h2 id="효율적인-편집">효율적인 편집</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>gg          → 첫 줄로 이동</span></span>
+<span class="line"><span>I           → 줄 맨 앞에서 입력 시작</span></span></code></pre>
+<p>본문을 쓰다가 흐름이 끊기면 <code>o</code>(아래 줄), <code>O</code>(위 줄)로 이어서 씁니다.</p>
+<h2 id="커밋-템플릿">커밋 템플릿</h2>
+<p><code>.gitmessage</code> 파일을 만들어 기본 템플릿을 적용할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ git config --global commit.template ~/.gitmessage</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># 제목</span></span>
+<span class="line"><span># </span></span>
+<span class="line"><span># 본문</span></span>
+<span class="line"><span># </span></span>
+<span class="line"><span># 꼬리말 (예: Closes #123)</span></span></code></pre>
+<h2 id="커밋-메시지-수정">커밋 메시지 수정</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ git commit --amend    → 마지막 커밋 메시지 수정</span></span>
+<span class="line"><span>$ git rebase -i         → 여러 커밋 메시지 일괄 수정</span></span></code></pre>
+<p><code>rebase -i</code>에서도 vim이 열리며, <code>pick</code>을 <code>reword</code>로 바꾸고 저장하면 해당 커밋의 메시지를 다시 입력할 수 있습니다.</p>
+<h2 id="연습">연습</h2>
+<ol>
+<li>실습 파일에 커밋 메시지 초안 작성</li>
+<li><code>gg</code>, <code>I</code>, <code>o</code>로 편집</li>
+<li><code>:wq</code>로 저장 (커밋 흐름 확인)</li>
+<li>커밋 템플릿을 로컬에 적용해보기</li>
+</ol>
+ </div>   <nav class="pager" data-astro-cid-qd5js4va> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/problems/07-yaml-indent/" data-astro-cid-qd5js4va="true" data-slot="button"> ← YAML 들여쓰기와 키 정렬 </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/problems/09-paste-multi/" data-pager-next="true" data-astro-cid-qd5js4va="true" data-slot="button"> 여러 줄에 동시에 붙여넣기 → </a> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>

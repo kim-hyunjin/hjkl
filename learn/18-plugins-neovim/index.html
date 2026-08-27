@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="플러그인 매니저와 Neovim 생태계를 이해하고 실무에 확장합니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>플러그인과 Neovim | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container"> <div class="detail-header" data-entry-id="18-plugins-neovim"> <div class="crumb">18강</div>  <h1>플러그인과 Neovim</h1> <p class="detail-summary">플러그인 매니저와 Neovim 생태계를 이해하고 실무에 확장합니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose"> <h2 id="플러그인-개념">플러그인 개념</h2>
+<p>vim은 플러그인으로 기능을 확장합니다. 플러그인 매니저가 설치·업데이트·관리를 도와줍니다.</p>
+<ul>
+<li>Vim: vim-plug, Vundle, Pathogen</li>
+<li>Neovim: lazy.nvim, packer.nvim</li>
+</ul>
+<h2 id="vim-plug-예시">vim-plug 예시</h2>
+<p><code>~/.vimrc</code>에 아래를 추가하고 <code>:PlugInstall</code> 실행.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>call plug#begin('~/.vim/plugged')</span></span>
+<span class="line"><span>Plug 'preservim/nerdtree'          " 파일 트리</span></span>
+<span class="line"><span>Plug 'vim-airline/vim-airline'     " 상태바</span></span>
+<span class="line"><span>Plug 'junegunn/fzf.vim'            " 파일 검색</span></span>
+<span class="line"><span>call plug#end()</span></span></code></pre>
+<h2 id="neovim과-lazynvim">Neovim과 lazy.nvim</h2>
+<p>Neovim은 Lua로 설정하며, lazy.nvim이 현재 사실상 표준입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="lua"><code><span class="line"><span style="color:#6A737D">-- ~/.config/nvim/init.lua</span></span>
+<span class="line"><span style="color:#F97583">local</span><span style="color:#E1E4E8"> lazypath </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> vim.</span><span style="color:#B392F0">fn</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">stdpath</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"data"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">..</span><span style="color:#9ECBFF"> "/lazy/lazy.nvim"</span></span>
+<span class="line"><span style="color:#E1E4E8">vim.</span><span style="color:#B392F0">opt</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">rtp</span><span style="color:#E1E4E8">:</span><span style="color:#79B8FF">prepend</span><span style="color:#E1E4E8">(lazypath)</span></span>
+<span class="line"><span style="color:#79B8FF">require</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"lazy"</span><span style="color:#E1E4E8">).</span><span style="color:#79B8FF">setup</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"nvim-treesitter/nvim-treesitter"</span><span style="color:#E1E4E8">, build </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> ":TSUpdate" </span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"nvim-lspconfig" </span><span style="color:#E1E4E8">},          </span><span style="color:#6A737D">-- LSP</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"hrsh7th/nvim-cmp" </span><span style="color:#E1E4E8">},        </span><span style="color:#6A737D">-- 자동완성</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"folke/tokyonight.nvim" </span><span style="color:#E1E4E8">},   </span><span style="color:#6A737D">-- 테마</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"nvim-telescope/telescope.nvim"</span><span style="color:#E1E4E8">, dependencies </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> { </span><span style="color:#9ECBFF">"nvim-lua/plenary.nvim" </span><span style="color:#E1E4E8">} },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"lewis6991/gitsigns.nvim" </span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">  { </span><span style="color:#9ECBFF">"tpope/vim-fugitive" </span><span style="color:#E1E4E8">},      </span><span style="color:#6A737D">-- git</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>
+<h2 id="추천-플러그인-생태계">추천 플러그인 생태계</h2>
+<table>
+<thead>
+<tr>
+<th>용도</th>
+<th>플러그인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>파일 탐색</td>
+<td>NERDTree, oil.nvim</td>
+</tr>
+<tr>
+<td>퍼지 검색</td>
+<td>fzf.vim, Telescope</td>
+</tr>
+<tr>
+<td>문법 강조</td>
+<td>vim-polyglot, Treesitter</td>
+</tr>
+<tr>
+<td>LSP/자동완성</td>
+<td>coc.nvim, nvim-lspconfig</td>
+</tr>
+<tr>
+<td>git 통합</td>
+<td>vim-fugitive, gitsigns</td>
+</tr>
+<tr>
+<td>상태바</td>
+<td>vim-airline, lualine</td>
+</tr>
+<tr>
+<td>테마</td>
+<td>tokyonight, gruvbox</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vim-vs-neovim">Vim vs Neovim</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Vim</th>
+<th>Neovim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>설정</td>
+<td>vimscript</td>
+<td>Lua (강력)</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>느슨한 통합</td>
+<td>내장 클라이언트</td>
+</tr>
+<tr>
+<td>터미널 지원</td>
+<td>구버전 제한</td>
+<td>내장 터미널</td>
+</tr>
+<tr>
+<td>커뮤니티</td>
+<td>성숙</td>
+<td>매우 활발</td>
+</tr>
+</tbody>
+</table>
+<h2 id="기본기와-플러그인">기본기와 플러그인</h2>
+<p>플러그인은 생산성을 높이지만, <strong>기본 vim 명령을 대체하지 않습니다.</strong> 플러그인 없이도 편하게 쓸 수 있을 때 비로소 추가하는 것이 좋은 전략입니다.</p>
+<h2 id="연습">연습</h2>
+<ol>
+<li>vim-plug 또는 lazy.nvim 설치</li>
+<li>테마, 파일 트리, 퍼지 검색 플러그인 추가</li>
+<li>LSP 설정으로 자동완성 활성화</li>
+<li>설정을 git 저장소로 관리</li>
+</ol>
+<p>지금까지 심화 과정을 마쳤습니다. 이제 <strong>실전예제</strong>와 <strong>챌린지</strong>로 넘어가 실무 감각을 키워보세요.</p>
+ </div>  <nav class="pager"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/17-diff-merge/" data-slot="button"> ← diff와 병합 — git과 함께 쓰기 </a> <span></span> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>

@@ -1,0 +1,1 @@
+import{t as e}from"./progress.CJpVWJz7.js";var t=document.querySelector(`[data-entry-id]`),n=document.querySelector(`[data-pager-next]`);if(t&&n){let r=t.dataset.entryId||``;n.addEventListener(`click`,()=>e(r),{once:!0})}

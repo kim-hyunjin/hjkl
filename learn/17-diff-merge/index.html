@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="vimdiff로 파일 차이를 보고 병합하는 방법을 배웁니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>diff와 병합 — git과 함께 쓰기 | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container"> <div class="detail-header" data-entry-id="17-diff-merge"> <div class="crumb">17강</div>  <h1>diff와 병합 — git과 함께 쓰기</h1> <p class="detail-summary">vimdiff로 파일 차이를 보고 병합하는 방법을 배웁니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose"> <h2 id="vimdiff">vimdiff</h2>
+<p>두 파일의 차이를 vim으로 비교할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ vimdiff a.txt b.txt</span></span>
+<span class="line"><span>$ vim -d a.txt b.txt</span></span></code></pre>
+<p>vim은 차이를 색상으로 보여주고, 차이 지점 사이를 이동하며 한쪽 내용을 가져올 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>]c</code></td>
+<td>다음 diff로 이동</td>
+</tr>
+<tr>
+<td><code>[c</code></td>
+<td>이전 diff로 이동</td>
+</tr>
+<tr>
+<td><code>do</code></td>
+<td>다른 쪽(diff obtain)에서 현재 창으로 가져오기</td>
+</tr>
+<tr>
+<td><code>dp</code></td>
+<td>현재 창을 다른 쪽으로 푸시</td>
+</tr>
+<tr>
+<td><code>:diffupdate</code></td>
+<td>diff 강제 갱신</td>
+</tr>
+<tr>
+<td><code>zo / zc</code></td>
+<td>diff 접기 열기/닫기</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-way-병합">3-way 병합</h2>
+<p>git 충돌 시 기본 편집기로 vim을 쓰면 3-way 병합이 제공됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ git mergetool -t vimdiff</span></span></code></pre>
+<p>git이 <code>MERGE_HEAD</code>를 기준으로 각 쪽을 열어줍니다. <code>dp</code>/<code>do</code>로 취할 조각을 골라 저장합니다.</p>
+<blockquote>
+<p><strong>중요:</strong> 병합 후 <strong>중간 창</strong>(병합 결과)을 저장하고 vim을 종료해야 합니다. git이 종료 상태를 보고 병합 완료를 결정합니다.</p>
+</blockquote>
+<h2 id="git-diff에서-사용">git diff에서 사용</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ git difftool -t vimdiff</span></span>
+<span class="line"><span>$ git diff | vim -</span></span></code></pre>
+<p><code>vim -</code>는 표준 입력을 편집 버퍼로 읽습니다. git diff 출력을 바로 vim으로 넘길 수 있습니다.</p>
+<h2 id="diff-모드-팁">diff 모드 팁</h2>
+<ul>
+<li><code>:set diffopt+=iwhite</code> — 공백 차이 무시</li>
+<li><code>:set scrollbind</code> — 창을 함께 스크롤</li>
+<li><code>:windo diffthis</code> — 모든 창 diff 모드</li>
+</ul>
+<h2 id="연습">연습</h2>
+<ol>
+<li><code>vimdiff a.txt b.txt</code>로 두 파일 비교</li>
+<li><code>]c</code>/<code>[c</code>로 차이 이동</li>
+<li><code>dp</code>로 한쪽 내용 이동</li>
+<li><code>do</code>로 되돌리기</li>
+</ol>
+<p>다음 강의는 <strong>플러그인과 Neovim</strong>으로 vim 생태계를 확장합니다.</p>
+ </div>  <nav class="pager"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/16-autocommand-options/" data-slot="button"> ← autocommand와 옵션 </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/18-plugins-neovim/" data-pager-next="true" data-slot="button"> 플러그인과 Neovim → </a> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>

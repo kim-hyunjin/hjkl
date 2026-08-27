@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="모션과 결합해 텍스트를 지우고 바꾸는 방법을 배웁니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>삭제와 변경 — d와 c 명령 | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container"> <div class="detail-header" data-entry-id="04-delete-change"> <div class="crumb">04강</div>  <h1>삭제와 변경 — d와 c 명령</h1> <p class="detail-summary">모션과 결합해 텍스트를 지우고 바꾸는 방법을 배웁니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose"> <h2 id="삭제-명령-d">삭제 명령 d</h2>
+<p><code>d</code>는 <strong>delete</strong>의 약자입니다. <code>d</code> 뒤에 <strong>모션</strong>을 붙여 범위를 정합니다.</p>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>커서 글자 하나 삭제</td>
+</tr>
+<tr>
+<td><code>dw</code></td>
+<td>단어 하나 삭제</td>
+</tr>
+<tr>
+<td><code>d$</code></td>
+<td>커서부터 줄 끝까지 삭제</td>
+</tr>
+<tr>
+<td><code>d0</code></td>
+<td>커서부터 줄 처음까지 삭제</td>
+</tr>
+<tr>
+<td><code>dd</code></td>
+<td>현재 줄 전체 삭제</td>
+</tr>
+<tr>
+<td><code>d3w</code></td>
+<td>단어 3개 삭제</td>
+</tr>
+<tr>
+<td><code>dG</code></td>
+<td>커서부터 파일 끝까지 삭제</td>
+</tr>
+</tbody>
+</table>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>The quick brown fox</span></span></code></pre>
+<p>커서가 <code>quick</code>의 <code>q</code>에 있을 때 <code>dw</code>를 누르면 <code>quick </code>가 지워져 <code>The brown fox</code>가 됩니다. 공백까지 포함해서 지운다는 점을 기억하세요.</p>
+<blockquote>
+<p><code>d</code> 뒤에 숫자+모션도 한 번에 쓸 수 있습니다. <code>d2w</code>는 단어 2개 삭제.</p>
+</blockquote>
+<h2 id="변경-명령-c">변경 명령 c</h2>
+<p><code>c</code>는 <strong>change</strong>의 약자입니다. 삭제한 뒤 <strong>Insert 모드로 전환</strong>됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cw</code></td>
+<td>단어 교체 (삭제 후 입력)</td>
+</tr>
+<tr>
+<td><code>c$</code></td>
+<td>커서부터 줄 끝까지 교체</td>
+</tr>
+<tr>
+<td><code>cc</code></td>
+<td>현재 줄 전체 교체</td>
+</tr>
+<tr>
+<td><code>ciw</code></td>
+<td>커서 안쪽 단어 교체</td>
+</tr>
+</tbody>
+</table>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>RED green</span></span></code></pre>
+<ul>
+<li><code>ciw</code> → <code>BUG green</code> (단어 전체가 바뀜)</li>
+<li><code>cw</code> → 단어 교체에 커서가 있던 위치부터 적용되는 미세한 차이가 있습니다.</li>
+</ul>
+<p><code>ciw</code>는 단어 <strong>안쪽</strong>(inner word)만 지우고, 공백과 주변을 보존합니다. 실무에서 가장 많이 쓰는 변경 명령입니다.</p>
+<h2 id="줄-지우기-패턴">줄 지우기 패턴</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>dd        → 줄 삭제</span></span>
+<span class="line"><span>3dd       → 3줄 삭제</span></span>
+<span class="line"><span>d$        → 줄 끝까지 삭제</span></span>
+<span class="line"><span>D         → d$ 와 동일</span></span>
+<span class="line"><span>dj        → 현재 줄과 아래 줄 삭제</span></span></code></pre>
+<h2 id="삭제된-텍스트는-레지스터에">삭제된 텍스트는 레지스터에</h2>
+<p>vim에서 삭제한 내용은 <strong>레지스터</strong>에 저장되어 <code>p</code>로 붙여넣을 수 있습니다. <code>dd</code> 후 <code>p</code>를 누르면 방금 지운 줄이 아래에 다시 나타납니다. (레지스터는 심화에서 자세히 다룹니다.)</p>
+<h2 id="주의-x와-x">주의: x와 X</h2>
+<table>
+<thead>
+<tr>
+<th>키</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>커서 위치 글자 삭제</td>
+</tr>
+<tr>
+<td><code>X</code></td>
+<td>커서 앞 글자 삭제</td>
+</tr>
+</tbody>
+</table>
+<h2 id="연습">연습</h2>
+<ol>
+<li><code>x</code>로 글자 삭제</li>
+<li><code>dw</code>로 단어 삭제</li>
+<li><code>dd</code>로 줄 삭제 후 <code>u</code>로 되돌리기</li>
+<li><code>ciw</code>로 단어 교체</li>
+</ol>
+<blockquote>
+<p>삭제 후 <code>u</code>하면 되돌릴 수 있으니 부담 없이 눌러보세요. <code>u</code>(undo)는 다음 강의에서 배웁니다.</p>
+</blockquote>
+ </div> <section class="mt-8" aria-label=" 삭제와 변경 — d와 c 명령 실습" data-astro-cid-znkh6qlq> <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1" data-astro-cid-znkh6qlq> <h2 class="text-lg font-bold" data-astro-cid-znkh6qlq>실습</h2> <p class="text-sm text-muted-foreground" data-astro-cid-znkh6qlq>
+에디터를 클릭한 뒤 키보드로 조작하세요. <code data-astro-cid-znkh6qlq>i</code> 입력, <code data-astro-cid-znkh6qlq>Esc</code> Normal, <code data-astro-cid-znkh6qlq>:w</code> 저장(다운로드), <code data-astro-cid-znkh6qlq>:q!</code> 강제 종료.
+</p> </div> <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file="lesson04.md" data-title="삭제와 변경 — d와 c 명령" data-astro-cid-znkh6qlq> <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="size-[11px] rounded-full bg-[#f85149]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#d29922]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#3fb950]" data-astro-cid-znkh6qlq></span> <span class="ml-1" data-astro-cid-znkh6qlq>lesson04.md</span> </div> <div class="relative h-[480px] overflow-hidden max-[760px]:h-80" data-astro-cid-znkh6qlq> <div class="practice-editor h-full" data-astro-cid-znkh6qlq></div> </div> <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="truncate" data-astro-cid-znkh6qlq>lesson04.md</span> <span class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error" data-practice-status data-astro-cid-znkh6qlq>초기화 중</span> </div> </div> </section> <script type="module" src="/hjkl/_astro/PracticeTerminal.astro_astro_type_script_index_0_lang.DW015VDE.js"></script> <nav class="pager"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/03-insert/" data-slot="button"> ← 텍스트 입력 — i a o와 Insert 모드 </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/05-undo-redo/" data-pager-next="true" data-slot="button"> 실행 취소와 다시 실행 — u, Ctrl+r → </a> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>

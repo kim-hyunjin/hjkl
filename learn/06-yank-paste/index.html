@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="y, p 명령으로 텍스트를 복사하고 붙여넣는 방법을 배웁니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>복사·붙여넣기 — yank와 paste | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container"> <div class="detail-header" data-entry-id="06-yank-paste"> <div class="crumb">06강</div>  <h1>복사·붙여넣기 — yank와 paste</h1> <p class="detail-summary">y, p 명령으로 텍스트를 복사하고 붙여넣는 방법을 배웁니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose"> <h2 id="yank-복사">yank: 복사</h2>
+<p>복사 명령은 <code>y</code>(yank)입니다. <code>d</code>처럼 모션과 결합합니다.</p>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>yw</code></td>
+<td>단어 복사</td>
+</tr>
+<tr>
+<td><code>y$</code></td>
+<td>커서부터 줄 끝까지 복사</td>
+</tr>
+<tr>
+<td><code>yy</code></td>
+<td>현재 줄 복사</td>
+</tr>
+<tr>
+<td><code>y2j</code></td>
+<td>현재 줄과 아래 2줄 복사</td>
+</tr>
+<tr>
+<td><code>yiw</code></td>
+<td>커서 안쪽 단어 복사</td>
+</tr>
+<tr>
+<td><code>yG</code></td>
+<td>커서부터 파일 끝까지 복사</td>
+</tr>
+</tbody>
+</table>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>The quick brown fox</span></span></code></pre>
+<p>커서가 <code>quick</code>의 <code>q</code>에 있을 때 <code>yw</code>를 누르면 <code>quick</code>이 복사됩니다.</p>
+<h2 id="paste-붙여넣기">paste: 붙여넣기</h2>
+<table>
+<thead>
+<tr>
+<th>키</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p</code></td>
+<td>커서 <strong>다음</strong>(아래 줄)에 붙여넣기</td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>커서 <strong>이전</strong>(위 줄)에 붙여넣기</td>
+</tr>
+</tbody>
+</table>
+<p>줄 단위(<code>yy</code>)로 복사했으면 <code>p</code>는 <strong>아래에 새 줄</strong>로 붙여넣고, 글자 단위(<code>yw</code>)면 커서 바로 다음에 붙여넣습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>yy  → "Hello" 줄 복사</span></span>
+<span class="line"><span>p   → 아래에 "Hello" 줄 추가</span></span></code></pre>
+<h2 id="레지스터-개념-예고">레지스터 개념 예고</h2>
+<p>복사하거나 삭제한 내용은 <code>"</code> 레지스터에 들어갑니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>"ayy   → a 레지스터에 줄 복사</span></span>
+<span class="line"><span>"ap    → a 레지스터 붙여넣기</span></span></code></pre>
+<p>레지스터 이름은 <code>a</code>~<code>z</code>로 여러 개를 쓸 수 있습니다. 자세한 내용은 심화 강의에서 다룹니다.</p>
+<h2 id="잘라내기cut는-삭제-그-자체">잘라내기(cut)는 삭제 그 자체</h2>
+<p><code>dd</code>로 지운 내용은 레지스터에 남기 때문에 <code>p</code>로 붙여넣을 수 있습니다. 즉 vim에서 <strong>삭제 = 잘라내기</strong>입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>dd   → 줄 잘라내기 (레지스터에 저장)</span></span>
+<span class="line"><span>p    → 그 줄 붙여넣기</span></span></code></pre>
+<h2 id="실무-패턴">실무 패턴</h2>
+<ol>
+<li><code>yy</code>로 줄 복사</li>
+<li><code>j</code>로 내려가서 <code>p</code>로 붙여넣기</li>
+<li>필요하면 <code>dd</code>로 제거</li>
+<li><code>u</code>로 실수 복구</li>
+</ol>
+<h2 id="연습">연습</h2>
+<ol>
+<li><code>yy</code> 후 <code>p</code>로 줄 복제</li>
+<li><code>yw</code>로 단어 복사 후 <code>p</code>로 붙여넣기</li>
+<li><code>dd</code> 후 <code>p</code>로 줄 이동(잘라내기 효과)</li>
+<li><code>"ayy</code>, <code>"ap</code>로 레지스터 사용</li>
+</ol>
+<p>다음 강의는 <strong>검색과 치환</strong>입니다. 긴 파일에서 원하는 곳으로 이동하고 바꾸는 능력은 생산성에 큰 영향을 줍니다.</p>
+ </div> <section class="mt-8" aria-label=" 복사·붙여넣기 — yank와 paste 실습" data-astro-cid-znkh6qlq> <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1" data-astro-cid-znkh6qlq> <h2 class="text-lg font-bold" data-astro-cid-znkh6qlq>실습</h2> <p class="text-sm text-muted-foreground" data-astro-cid-znkh6qlq>
+에디터를 클릭한 뒤 키보드로 조작하세요. <code data-astro-cid-znkh6qlq>i</code> 입력, <code data-astro-cid-znkh6qlq>Esc</code> Normal, <code data-astro-cid-znkh6qlq>:w</code> 저장(다운로드), <code data-astro-cid-znkh6qlq>:q!</code> 강제 종료.
+</p> </div> <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file="lesson06.md" data-title="복사·붙여넣기 — yank와 paste" data-astro-cid-znkh6qlq> <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="size-[11px] rounded-full bg-[#f85149]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#d29922]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#3fb950]" data-astro-cid-znkh6qlq></span> <span class="ml-1" data-astro-cid-znkh6qlq>lesson06.md</span> </div> <div class="relative h-[480px] overflow-hidden max-[760px]:h-80" data-astro-cid-znkh6qlq> <div class="practice-editor h-full" data-astro-cid-znkh6qlq></div> </div> <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="truncate" data-astro-cid-znkh6qlq>lesson06.md</span> <span class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error" data-practice-status data-astro-cid-znkh6qlq>초기화 중</span> </div> </div> </section> <script type="module" src="/hjkl/_astro/PracticeTerminal.astro_astro_type_script_index_0_lang.DW015VDE.js"></script> <nav class="pager"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/05-undo-redo/" data-slot="button"> ← 실행 취소와 다시 실행 — u, Ctrl+r </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/07-search-replace/" data-pager-next="true" data-slot="button"> 검색과 치환 — / ? :s → </a> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>

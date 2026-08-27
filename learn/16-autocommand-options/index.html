@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="파일 형식·이벤트에 반응하는 autocommand와 vimrc 옵션 설정을 배웁니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>autocommand와 옵션 | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.CuJxIjV8.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body> <a class="skip-link" href="#main">본문으로 건너뛰기</a> <header class="site-header"> <div class="container"> <nav class="nav" aria-label="주요 메뉴"> <a href="/hjkl/" class="nav-brand" aria-label="hjkl 홈"> <span class="brand-mark">hjkl</span> <span>Vim 학습</span> </a> <div class="nav-links"> <a href="/hjkl/"> 홈 </a><a href="/hjkl/learn/"> 학습하기 </a><a href="/hjkl/cheatsheet/"> 치트시트 </a> </div> <div class="nav-actions"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main">  <article class="detail container"> <div class="detail-header" data-entry-id="16-autocommand-options"> <div class="crumb">16강</div>  <h1>autocommand와 옵션</h1> <p class="detail-summary">파일 형식·이벤트에 반응하는 autocommand와 vimrc 옵션 설정을 배웁니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose"> <h2 id="autocommand란">autocommand란</h2>
+<p>autocommand(줄여서 autocmd)는 <strong>vim의 특정 이벤트가 발생했을 때</strong> 명령을 자동 실행하는 기능입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>:autocmd {이벤트} {패턴} {명령}</span></span></code></pre>
+<h2 id="자주-쓰는-이벤트">자주 쓰는 이벤트</h2>
+<table>
+<thead>
+<tr>
+<th>이벤트</th>
+<th>발생 시점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BufRead</code></td>
+<td>파일 읽을 때</td>
+</tr>
+<tr>
+<td><code>BufWritePre</code></td>
+<td>저장 직전</td>
+</tr>
+<tr>
+<td><code>BufNewFile</code></td>
+<td>새 파일 만들 때</td>
+</tr>
+<tr>
+<td><code>FileType</code></td>
+<td>파일 형식 결정될 때</td>
+</tr>
+<tr>
+<td><code>CursorHold</code></td>
+<td>일정 시간 입력 없을 때</td>
+</tr>
+</tbody>
+</table>
+<h2 id="예제">예제</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>:autocmd FileType python setlocal expandtab shiftwidth=4</span></span>
+<span class="line"><span>:autocmd BufWritePre *.js %s/\s\+$//e</span></span></code></pre>
+<ul>
+<li>Python 파일을 열면 탭 대신 공백 4칸</li>
+<li>JS 파일 저장 전 줄 끝 공백 제거</li>
+</ul>
+<h2 id="augroup으로-정리"><code>augroup</code>으로 정리</h2>
+<p>autocmd를 여러 번 정의하면 중복 실행됩니다. <strong>augroup</strong>으로 묶어서 한 번만 정의하는 것이 정석입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>:augroup MyConfig</span></span>
+<span class="line"><span>:  autocmd!</span></span>
+<span class="line"><span>:  autocmd FileType markdown setlocal wrap</span></span>
+<span class="line"><span>:  autocmd BufWritePre * %s/\s\+$//e</span></span>
+<span class="line"><span>:augroup END</span></span></code></pre>
+<h2 id="vimrc에-넣기">vimrc에 넣기</h2>
+<p><code>~/.vimrc</code>(또는 <code>~/.config/nvim/init.vim</code>)에 위 설정을 저장하면 매번 적용됩니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>" ~/.vimrc</span></span>
+<span class="line"><span>set number</span></span>
+<span class="line"><span>set relativenumber</span></span>
+<span class="line"><span>set tabstop=4</span></span>
+<span class="line"><span>set shiftwidth=4</span></span>
+<span class="line"><span>set expandtab</span></span>
+<span class="line"><span>set hlsearch</span></span>
+<span class="line"><span>set incsearch</span></span>
+<span class="line"><span>set ignorecase smartcase</span></span>
+<span class="line"><span>set scrolloff=5</span></span>
+<span class="line"><span>syntax on</span></span>
+<span class="line"><span>filetype plugin indent on</span></span></code></pre>
+<h2 id="자주-쓰는-옵션">자주 쓰는 옵션</h2>
+<table>
+<thead>
+<tr>
+<th>옵션</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>number</code> / <code>relativenumber</code></td>
+<td>줄 번호 / 상대 줄 번호</td>
+</tr>
+<tr>
+<td><code>tabstop</code></td>
+<td>탭 너비</td>
+</tr>
+<tr>
+<td><code>shiftwidth</code></td>
+<td>들여쓰기 너비</td>
+</tr>
+<tr>
+<td><code>expandtab</code></td>
+<td>탭을 공백으로</td>
+</tr>
+<tr>
+<td><code>hlsearch</code> / <code>incsearch</code></td>
+<td>검색 하이라이트 / 점진 검색</td>
+</tr>
+<tr>
+<td><code>ignorecase smartcase</code></td>
+<td>대소문자 무시하되 대문자 있으면 구분</td>
+</tr>
+<tr>
+<td><code>scrolloff</code></td>
+<td>화면 끝에서 유지할 여백</td>
+</tr>
+<tr>
+<td><code>wildmenu</code></td>
+<td>명령행 자동완성 메뉴</td>
+</tr>
+</tbody>
+</table>
+<h2 id="매핑mapping">매핑(mapping)</h2>
+<p>자주 쓰는 동작은 키에 매핑할 수 있습니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>:nnoremap &lt;Space&gt; za        → Space로 접기 토글</span></span>
+<span class="line"><span>:nnoremap &lt;C-h&gt; &lt;C-w&gt;h      → Ctrl+h로 창 이동</span></span>
+<span class="line"><span>:inoremap jj &lt;Esc&gt;          → jj 연타로 입력 모드 탈출</span></span></code></pre>
+<p><code>nnoremap</code>의 <code>nore</code>는 “재귀 없이”라는 뜻으로, 기본 동작을 덮어쓰는 안전한 매핑입니다.</p>
+<h2 id="연습">연습</h2>
+<ol>
+<li><code>:set number relativenumber</code> 적용</li>
+<li><code>:nnoremap jj &lt;Esc&gt;</code> 등록 후 <code>jj</code>로 탈출</li>
+<li><code>:autocmd FileType markdown setlocal wrap</code> 실행</li>
+<li>설정을 vimrc에 저장해 재부팅 후에도 유지 확인</li>
+</ol>
+<p>다음 강의는 <strong>diff와 병합</strong>으로 git과 함께 쓰는 법을 배웁니다.</p>
+ </div>  <nav class="pager"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/15-text-objects/" data-slot="button"> ← 텍스트 객체 — 구조 단위 편집 </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/learn/17-diff-merge/" data-pager-next="true" data-slot="button"> diff와 병합 — git과 함께 쓰기 → </a> </nav> </article>  </main> <footer class="site-footer"> <div class="container footer-inner"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>
