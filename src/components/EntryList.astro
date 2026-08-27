@@ -1,0 +1,93 @@
+---
+import { link } from "../lib/site";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./starwind/card";
+import { Badge } from "./starwind/badge";
+import type { CollectionEntry } from "astro:content";
+
+type Entry = CollectionEntry<"lessons"> | CollectionEntry<"problems">;
+
+interface Props {
+  items: Entry[];
+  hrefPrefix: string;
+  showDifficulty?: boolean;
+}
+
+const { items, hrefPrefix, showDifficulty = false } = Astro.props;
+---
+
+<ul class="entry-list">
+  {
+    items.map((item, i) => (
+      <li>
+        <a class="card-link" href={link(`${hrefPrefix}/${item.id}/`)}>
+          <Card class="w-full transition-colors hover:border-primary/60">
+            <CardHeader>
+              <div class="flex items-center gap-2">
+                <span class="status-dot" data-complete={item.id} aria-label="완료 여부" />
+                <span class="card-num">{String(i + 1).padStart(2, "0")}</span>
+                {showDifficulty && "difficulty" in item.data && <Badge variant="outline" class="text-primary border-primary">{item.data.difficulty}</Badge>}
+              </div>
+              <CardTitle>{item.data.title}</CardTitle>
+              <CardDescription>{item.data.summary}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="card-tags flex flex-wrap gap-1.5">
+                {item.data.tags.map((tag) => <Badge tone="neutral" appearance="soft" size="sm">{tag}</Badge>)}
+              </div>
+            </CardContent>
+          </Card>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  import { readCompleted } from "../scripts/progress";
+
+  const refresh = () => {
+    const completed = readCompleted();
+    document.querySelectorAll<HTMLElement>("[data-complete]").forEach((el) => {
+      const id = el.dataset.complete || "";
+      el.classList.toggle("is-done", completed.has(id));
+    });
+  };
+  refresh();
+  window.addEventListener("hjkl:progress", refresh);
+</script>
+
+<style>
+  .entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .card-link {
+    display: block;
+    color: var(--foreground);
+    text-decoration: none;
+  }
+  .card-link:hover {
+    text-decoration: none;
+  }
+  .card-num {
+    font-family: "SFMono-Regular", ui-monospace, Menlo, monospace;
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+  }
+  .status-dot {
+    display: inline-block;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 999px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+  .status-dot.is-done {
+    border-color: var(--primary);
+    background: var(--primary);
+  }
+</style>

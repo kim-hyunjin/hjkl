@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EntryList from "../../components/EntryList.astro";
+import { getCollection } from "astro:content";
+
+const curriculum = (await getCollection("lessons")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="학습하기" current="/learn/">
+  <div class="container learn-page">
+    <EntryList items={curriculum} hrefPrefix="/learn" />
+  </div>
+</BaseLayout>
+
+<style>
+  .learn-page {
+    padding-top: 2.5rem;
+  }
+</style>

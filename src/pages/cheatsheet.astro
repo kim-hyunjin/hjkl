@@ -1,0 +1,183 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Input } from "../components/starwind/input";
+import { Table, TableBody, TableRow, TableCell } from "../components/starwind/table";
+
+interface KeyRow {
+  keys: string;
+  desc: string;
+}
+
+interface Category {
+  title: string;
+  items: KeyRow[];
+}
+
+const categories: Category[] = [
+  {
+    title: "커서 이동",
+    items: [
+      { keys: "h j k l", desc: "왼쪽 / 아래 / 위 / 오른쪽" },
+      { keys: "w / b", desc: "다음 단어 시작 / 이전 단어 시작" },
+      { keys: "e / ge", desc: "다음 단어 끝 / 이전 단어 끝" },
+      { keys: "0 / $", desc: "줄 맨 앞 / 줄 맨 끝" },
+      { keys: "^", desc: "줄의 첫 글자(공백 제외)로" },
+      { keys: "gg / G", desc: "파일 첫 줄 / 파일 마지막 줄" },
+      { keys: "nG", desc: "n번째 줄로 이동" },
+      { keys: "Ctrl+d / Ctrl+u", desc: "반 페이지 아래 / 위" },
+      { keys: "Ctrl+f / Ctrl+b", desc: "한 페이지 아래 / 위" },
+      { keys: "H / M / L", desc: "화면 위 / 중간 / 아래로 이동" },
+      { keys: "%", desc: "짝 괄호로 이동" },
+      { keys: "f{ch} / t{ch}", desc: "같은 줄 다음 {ch} / 그 직전까지" },
+      { keys: "{ / }", desc: "이전 문단 / 다음 문단" },
+    ],
+  },
+  {
+    title: "편집",
+    items: [
+      { keys: "i / a", desc: "커서 앞에 삽입 / 뒤에 삽입" },
+      { keys: "I / A", desc: "줄 맨 앞에 삽입 / 줄 맨 끝에 삽입" },
+      { keys: "o / O", desc: "아래에 새 줄 삽입 / 위에 새 줄 삽입" },
+      { keys: "r", desc: "현재 글자 교체" },
+      { keys: "R", desc: "대체(Replace) 모드" },
+      { keys: "s / S", desc: "글자 지우고 삽입 / 줄 지우고 삽입" },
+      { keys: "x / X", desc: "커서 글자 삭제 / 앞 글자 삭제" },
+      { keys: "d{motion}", desc: "모션 범위 삭제" },
+      { keys: "dd", desc: "한 줄 삭제" },
+      { keys: "D / C", desc: "줄 끝까지 삭제 / 삭제 후 삽입" },
+      { keys: "c{motion} / cc", desc: "변경(삭제+삽입) / 한 줄 변경" },
+      { keys: "~", desc: "대소문자 전환" },
+      { keys: "u / Ctrl+r", desc: "실행 취소 / 다시 실행" },
+    ],
+  },
+  {
+    title: "복사·붙여넣기",
+    items: [
+      { keys: "y{motion} / yy", desc: "복사 / 한 줄 복사" },
+      { keys: "p / P", desc: "다음에 붙여넣기 / 이전에 붙여넣기" },
+      { keys: "yiw / diw / ciw", desc: "단어 복사 / 삭제 / 변경" },
+      { keys: "y$", desc: "커서부터 줄 끝까지 복사" },
+      { keys: "\"ayy", desc: "레지스터 a에 줄 복사" },
+      { keys: "\"ap", desc: "레지스터 a 붙여넣기" },
+    ],
+  },
+  {
+    title: "검색·치환",
+    items: [
+      { keys: "/{pattern}", desc: "아래 방향 검색" },
+      { keys: "?{pattern}", desc: "위 방향 검색" },
+      { keys: "n / N", desc: "다음 검색 결과 / 이전 검색 결과" },
+      { keys: "* / #", desc: "커서 아래 단어 검색(아래/위)" },
+      { keys: ":s/old/new/g", desc: "현재 줄에서 모두 치환" },
+      { keys: ":%s/old/new/g", desc: "파일 전체 치환" },
+      { keys: ":%s/old/new/gc", desc: "치환 전 확인" },
+      { keys: ":%s/\\v(\\w+)/\\1/g", desc: "정규식 그룹 치환" },
+    ],
+  },
+  {
+    title: "파일·윈도우",
+    items: [
+      { keys: ":w", desc: "저장" },
+      { keys: ":q / :q!", desc: "종료 / 저장 없이 종료" },
+      { keys: ":wq / :x", desc: "저장 후 종료" },
+      { keys: ":e {file}", desc: "파일 열기" },
+      { keys: ":new / :vnew", desc: "가로 분할 / 세로 분할" },
+      { keys: ":sp {file}", desc: "파일을 가로 분할로 열기" },
+      { keys: "Ctrl+w w", desc: "다음 분할창으로 이동" },
+      { keys: "Ctrl+w h/j/k/l", desc: "방향별 분할창 이동" },
+      { keys: ":bn / :bp", desc: "다음 버퍼 / 이전 버퍼" },
+      { keys: ":ls", desc: "버퍼 목록" },
+      { keys: ":bd", desc: "버퍼 삭제" },
+    ],
+  },
+  {
+    title: "블록·비주얼",
+    items: [
+      { keys: "v", desc: "문자 단위 비주얼 모드" },
+      { keys: "V", desc: "줄 단위 비주얼 모드" },
+      { keys: "Ctrl+v", desc: "블록 비주얼 모드" },
+      { keys: "gv", desc: "이전 비주얼 선택 영역 다시 선택" },
+      { keys: "o", desc: "비주얼 선택 반대 끝으로 이동" },
+      { keys: "> / <", desc: "들여쓰기 / 내어쓰기" },
+    ],
+  },
+  {
+    title: "기타 유용한 명령",
+    items: [
+      { keys: "Ctrl+n", desc: "자동 완성(현재 버퍼)" },
+      { keys: "Ctrl+p", desc: "자동 완성(역방향)" },
+      { keys: ".", desc: "마지막 변경 반복" },
+      { keys: "J", desc: "다음 줄과 합치기" },
+      { keys: "zz / zt / zb", desc: "커서 줄을 화면 중앙 / 위 / 아래로" },
+      { keys: "ma / `a", desc: "마크 설정 / 마크로 이동" },
+      { keys: "qa / q / @a", desc: "매크로 기록 시작 / 중지 / 재생" },
+      { keys: ":set number", desc: "줄 번호 표시" },
+      { keys: ":set relativenumber", desc: "상대 줄 번호 표시" },
+      { keys: ":nohlsearch", desc: "검색 하이라이트 제거" },
+      { keys: ":help {topic}", desc: "도움말 열기" },
+    ],
+  },
+];
+---
+
+<BaseLayout title="치트시트" description="자주 쓰는 vim 명령어 모음" current="/cheatsheet/">
+  <div class="section-hero container">
+    <h1>치트시트</h1>
+    <p class="section-desc">자주 쓰는 vim 명령어를 카테고리별로 정리했습니다. 키워드로 빠르게 검색해보세요.</p>
+    <Input id="cheat-filter" type="search" size="sm" placeholder="명령어·설명 검색 (예: 치환, split, yank)" class="max-w-lg" />
+  </div>
+
+  <div class="container">
+    {
+      categories.map((cat) => (
+        <section class="cheat-category" data-category={cat.title}>
+          <h2>{cat.title}</h2>
+          <Table>
+            <TableBody>
+              {
+                cat.items.map((row) => (
+                  <TableRow class="cheat-row" data-term={row.desc}>
+                    <TableCell class="cheat-keys"><code>{row.keys}</code></TableCell>
+                    <TableCell>{row.desc}</TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  const filter = document.getElementById("cheat-filter") as HTMLInputElement;
+  const categories = Array.from(document.querySelectorAll<HTMLElement>("[data-category]"));
+  const rows = Array.from(document.querySelectorAll<HTMLElement>(".cheat-row"));
+
+  filter.addEventListener("input", () => {
+    const q = filter.value.trim().toLowerCase();
+    let anyVisible = false;
+    for (const row of rows) {
+      const text = (row.getAttribute("data-term") || "").toLowerCase() + " " + row.textContent?.toLowerCase();
+      const visible = q.length === 0 || text.includes(q);
+      row.style.display = visible ? "" : "none";
+      if (visible) anyVisible = true;
+    }
+    for (const cat of categories) {
+      const hasVisible = Array.from(cat.querySelectorAll<HTMLElement>(".cheat-row")).some(
+        (r) => r.style.display !== "none"
+      );
+      cat.style.display = hasVisible ? "" : "none";
+    }
+    let hint = document.getElementById("cheat-noresult");
+    if (!hint) {
+      hint = document.createElement("p");
+      hint.id = "cheat-noresult";
+      hint.className = "cheat-noresult";
+      document.querySelector(".container")?.appendChild(hint);
+    }
+    hint.style.display = anyVisible ? "none" : "";
+    hint.textContent = "일치하는 명령어가 없습니다.";
+  });
+</script>

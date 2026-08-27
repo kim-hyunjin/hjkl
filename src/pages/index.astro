@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProblemTable from "../components/ProblemTable.astro";
+import { getCollection } from "astro:content";
+
+const problems = (await getCollection("problems")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="홈" current="/">
+  <div class="hero">
+    <div class="container">
+      <h1>손끝에서 완성되는 vim</h1>
+      <p class="hero-sub">
+        기초부터 심화까지 단계적으로 배우고, 실전 문제로 직접 손끝에 익혀보세요. 브라우저에서 실제 vim을 실행하며 연습할 수 있습니다.
+      </p>
+      <div class="hero-terminal" aria-hidden="true">
+        <span class="prompt">$</span> <span class="cmd">vim lesson_01.md</span><br />
+        <span class="comment">손끝이 기억하는 순간, 당신은 vim을 배운 것입니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <section class="problems">
+      <h2 class="text-xl font-bold">문제</h2>
+      <p class="text-sm text-muted-foreground mt-1">난이도별로 정리된 문제 목록입니다. 풀어보고 싶은 문제를 골라보세요.</p>
+      <ProblemTable items={problems} />
+    </section>
+  </div>
+</BaseLayout>

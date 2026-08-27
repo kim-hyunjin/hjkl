@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Button } from "../../components/starwind/button";
+import { Collapsible } from "../../components/starwind/collapsible";
+import PracticeTerminal from "../../components/PracticeTerminal.astro";
+import DetailHeader from "../../components/DetailHeader.astro";
+import { link } from "../../lib/site";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const problems = await getCollection("problems");
+  return problems.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const problems = (await getCollection("problems")).sort((a, b) => a.data.order - b.data.order);
+const idx = problems.findIndex((p) => p.id === entry.id);
+const prev = idx > 0 ? problems[idx - 1] : undefined;
+const next = idx >= 0 && idx < problems.length - 1 ? problems[idx + 1] : undefined;
+
+const crumbSuffix = `${String(entry.data.order).padStart(2, "0")}번`;
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.summary} current="/">
+  <article class="detail container">
+    <DetailHeader
+      crumb={crumbSuffix}
+      title={entry.data.title}
+      summary={entry.data.summary}
+      entryId={entry.id}
+      badge={entry.data.difficulty}
+    />
+    <div class="prose">
+      <Content />
+    </div>
+    {
+      entry.data.practice && (
+        <PracticeTerminal file={entry.data.practiceFile ?? "problem.md"} title={entry.data.title} />
+      )
+    }
+    {
+      entry.data.hint && (
+        <Collapsible.Root>
+          <Collapsible.Trigger>힌트 · 정답 보기</Collapsible.Trigger>
+          <Collapsible.Panel>
+            <p>{entry.data.hint}</p>
+            {entry.data.answer && <pre>{entry.data.answer}</pre>}
+          </Collapsible.Panel>
+        </Collapsible.Root>
+      )
+    }
+    <nav class="pager">
+      {prev ? <Button as="a" variant="ghost" href={link(`/problems/${prev.id}/`)}>← {prev.data.title}</Button> : <span></span>}
+      {next ? <Button as="a" variant="ghost" href={link(`/problems/${next.id}/`)} data-pager-next>{next.data.title} →</Button> : <span></span>}
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .prose {
+    max-width: 72ch;
+  }
+</style>

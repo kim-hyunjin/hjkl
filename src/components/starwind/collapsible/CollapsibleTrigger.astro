@@ -1,0 +1,26 @@
+---
+import ChevronDown from "@tabler/icons/outline/chevron-down.svg";
+import CollapsiblePrimitive from "@starwind-ui/astro/collapsible";
+import type { HTMLAttributes } from "astro/types";
+
+import { collapsibleTrigger } from "./variants";
+
+type Props = HTMLAttributes<"button"> & {
+  asChild?: boolean;
+};
+
+const { asChild, class: className, ...rest } = Astro.props;
+---
+
+<CollapsiblePrimitive.Trigger
+  class={collapsibleTrigger({ class: className })}
+  asChild={asChild}
+  {...rest}
+  data-slot="collapsible-trigger"
+>
+  <slot />
+  <ChevronDown
+    class="size-4 shrink-0 transition-transform group-data-[state=open]:rotate-180"
+    aria-hidden="true"
+  />
+</CollapsiblePrimitive.Trigger>

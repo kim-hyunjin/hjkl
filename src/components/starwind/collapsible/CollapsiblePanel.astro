@@ -1,0 +1,21 @@
+---
+import CollapsiblePrimitive from "@starwind-ui/astro/collapsible";
+import type { HTMLAttributes } from "astro/types";
+
+import { collapsiblePanel } from "./variants";
+
+type Props = HTMLAttributes<"div"> & {
+  hiddenUntilFound?: boolean;
+};
+
+const { hiddenUntilFound, class: className, ...rest } = Astro.props;
+---
+
+<CollapsiblePrimitive.Panel
+  class={collapsiblePanel({ class: className })}
+  hiddenUntilFound={hiddenUntilFound}
+  {...rest}
+  data-slot="collapsible-panel"
+>
+  <slot />
+</CollapsiblePrimitive.Panel>

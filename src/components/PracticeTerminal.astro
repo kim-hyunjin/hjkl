@@ -1,0 +1,181 @@
+---
+interface Props {
+  file: string;
+  title?: string;
+  group?: string;
+}
+
+const { file, title = "vim 연습장", group = "" } = Astro.props;
+---
+
+<section class="mt-8" aria-label={`${group} ${title} 실습`}>
+  <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+    <h2 class="text-lg font-bold">{group ? `${group} 실습` : "실습"}</h2>
+    <p class="text-sm text-muted-foreground">
+      에디터를 클릭한 뒤 키보드로 조작하세요. <code>i</code> 입력, <code>Esc</code> Normal, <code>:w</code> 저장(다운로드), <code>:q!</code> 강제 종료.
+    </p>
+  </div>
+
+  <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file={file} data-title={title}>
+    <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground">
+      <span class="size-[11px] rounded-full bg-[#f85149]"></span>
+      <span class="size-[11px] rounded-full bg-[#d29922]"></span>
+      <span class="size-[11px] rounded-full bg-[#3fb950]"></span>
+      <span class="ml-1">{file}</span>
+    </div>
+    <div class="relative h-[480px] overflow-hidden max-[760px]:h-80">
+      <div class="practice-editor h-full"></div>
+    </div>
+    <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground">
+      <span class="truncate">{file}</span>
+      <span
+        class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error"
+        data-practice-status
+      >초기화 중</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { basicSetup, EditorView } from "codemirror";
+  import { vim, Vim, type CodeMirror } from "@replit/codemirror-vim";
+
+  const BASE = import.meta.env.BASE_URL ?? "/";
+
+  interface TerminalState {
+    fileName: string;
+    originalContent: string;
+    savedContent: string;
+    statusEl: HTMLElement;
+  }
+
+  const terminalStates = new Map<EditorView, TerminalState>();
+
+  function downloadFile(name: string, content: string) {
+    const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  const setStatus = (st: TerminalState, text: string, kind: "idle" | "loading" | "ready" | "error" | "done" = "idle") => {
+    st.statusEl.textContent = text;
+    st.statusEl.dataset.kind = kind;
+  };
+
+  function stateOf(cm: CodeMirror): TerminalState | undefined {
+    const view = (cm as any).cm6 as EditorView | undefined;
+    return view ? terminalStates.get(view) : undefined;
+  }
+
+  function saveWith(cm: CodeMirror, argString: string | undefined, message: (name: string) => string) {
+    const st = stateOf(cm);
+    if (!st) return;
+    const name = argString?.trim().split(/\s+/)[0] || st.fileName;
+    downloadFile(name, cm.getValue());
+    st.savedContent = cm.getValue();
+    setStatus(st, message(name), "done");
+  }
+
+  Vim.defineEx("write", "w", (cm, params) => saveWith(cm, params.argString, (n) => `저장됨: ${n}`));
+  Vim.defineEx("wq", "wq", (cm, params) => saveWith(cm, params.argString, (n) => `저장 후 종료: ${n}`));
+  Vim.defineEx("xit", "x", (cm, params) => saveWith(cm, params.argString, (n) => `저장 후 종료: ${n}`));
+
+  Vim.defineEx("quit", "q", (cm, params) => {
+    const st = stateOf(cm);
+    if (!st) return;
+    if (params.args?.includes("!")) {
+      cm.setValue(st.originalContent);
+      st.savedContent = st.originalContent;
+      setStatus(st, "종료됨 (변경 사항 버림)", "done");
+      return;
+    }
+    if (cm.getValue() !== st.savedContent) {
+      setStatus(st, "E37: 저장되지 않은 변경 사항이 있습니다 (:q! 로 강제 종료)", "error");
+    } else {
+      setStatus(st, "종료됨", "done");
+    }
+  });
+
+  Vim.mapCommand("ZZ", "keyToEx", "", undefined, { exArgs: { input: "wq" } });
+
+  const theme = EditorView.theme({
+    "&": { fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
+    ".cm-content": { caretColor: "#f0f6fc" },
+    ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#f0f6fc" },
+    ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, & ::selection": { backgroundColor: "#264f78 !important" },
+    ".cm-activeLine": { backgroundColor: "rgba(110,118,129,0.12)" },
+    ".cm-activeLineGutter": { backgroundColor: "rgba(110,118,129,0.12)" },
+    ".cm-gutters": { background: "#0d1117", color: "#8b949e", border: "none" },
+    ".cm-lineNumbers .cm-gutterElement": { padding: "0 8px 0 12px" },
+    ".cm-searchMatch": { outline: "1px solid #f0c674 !important", background: "transparent" },
+    ".cm-vim-panel": {
+      background: "#161b22",
+      borderTop: "1px solid #30363d",
+      color: "#8b949e",
+      padding: "2px 10px",
+      minHeight: "1.5em",
+    },
+  });
+
+  async function loadFile(st: TerminalState, view: EditorView, name: string) {
+    setStatus(st, "파일 로드 중…", "loading");
+    st.fileName = name;
+    let content = "// hjkl 실습 파일\n// vim으로 편집해보세요.\n\n";
+    try {
+      const res = await fetch(`${BASE}practice/${name}`);
+      if (res.ok) content = await res.text();
+    } catch {}
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: content },
+      selection: { anchor: 0 },
+    });
+    st.originalContent = content;
+    st.savedContent = content;
+    setStatus(st, `로드됨: ${name}`, "ready");
+    view.focus();
+  }
+
+  async function initTerminal(root: HTMLElement) {
+    const host = root.querySelector<HTMLElement>(".practice-editor");
+    const statusEl = root.querySelector<HTMLElement>("[data-practice-status]");
+    if (!host || !statusEl) return;
+
+    const fileName = root.dataset.file || "lesson01.md";
+
+    const view = new EditorView({
+      doc: "",
+      extensions: [vim({ status: true }), basicSetup, EditorView.lineWrapping, theme],
+      parent: host,
+    });
+
+    const st: TerminalState = { fileName, originalContent: "", savedContent: "", statusEl };
+    terminalStates.set(view, st);
+    await loadFile(st, view, fileName);
+  }
+
+  document.querySelectorAll("[data-practice-terminal]").forEach((el) => initTerminal(el as HTMLElement));
+</script>
+
+<style>
+  /* CodeMirror 내부 DOM(라이브러리 생성)은 유틸리티로 표현할 수 없어 스코프 CSS로 둠 */
+  .practice-editor .cm-editor {
+    height: 100%;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+
+  .practice-editor .cm-editor.cm-focused {
+    outline: none;
+  }
+
+  .practice-editor .cm-scroller {
+    font-family: "SFMono-Regular", ui-monospace, Menlo, monospace;
+    line-height: 1.6;
+  }
+</style>

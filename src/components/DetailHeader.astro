@@ -1,0 +1,39 @@
+---
+import { Badge } from "./starwind/badge";
+
+interface Props {
+  crumb: string;
+  title: string;
+  summary: string;
+  entryId: string;
+  badge?: string;
+}
+
+const { crumb, title, summary, entryId, badge } = Astro.props;
+---
+
+<div class="detail-header" data-entry-id={entryId}>
+  <div class="crumb">{crumb}</div>
+  {
+    badge && (
+      <div class="detail-meta">
+        <Badge variant="outline" class="border-primary text-primary">
+          {badge}
+        </Badge>
+      </div>
+    )
+  }
+  <h1>{title}</h1>
+  <p class="detail-summary">{summary}</p>
+</div>
+
+<script>
+  import { markComplete } from "../scripts/progress";
+
+  const header = document.querySelector<HTMLElement>("[data-entry-id]");
+  const nextLink = document.querySelector<HTMLAnchorElement>("[data-pager-next]");
+  if (header && nextLink) {
+    const id = header.dataset.entryId || "";
+    nextLink.addEventListener("click", () => markComplete(id), { once: true });
+  }
+</script>
