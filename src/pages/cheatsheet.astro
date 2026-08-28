@@ -121,23 +121,27 @@ const categories: Category[] = [
 ---
 
 <BaseLayout title="치트시트" description="자주 쓰는 vim 명령어 모음" current="/cheatsheet/">
-  <div class="section-hero container">
-    <h1>치트시트</h1>
-    <p class="section-desc">자주 쓰는 vim 명령어를 카테고리별로 정리했습니다. 키워드로 빠르게 검색해보세요.</p>
+  <div class="mx-auto w-full max-w-[1080px] px-5 pt-10 pb-6">
+    <h1 class="mb-1">치트시트</h1>
+    <p class="max-w-[40rem] text-muted-foreground">자주 쓰는 vim 명령어를 카테고리별로 정리했습니다. 키워드로 빠르게 검색해보세요.</p>
     <Input id="cheat-filter" type="search" size="sm" placeholder="명령어·설명 검색 (예: 치환, split, yank)" class="max-w-lg" />
   </div>
 
-  <div class="container">
+  <div class="mx-auto w-full max-w-[1080px] px-5" id="cheat-list">
     {
       categories.map((cat) => (
-        <section class="cheat-category" data-category={cat.title}>
-          <h2>{cat.title}</h2>
+        <section class="mb-10" data-category={cat.title}>
+          <h2 class="mb-3 border-b border-border pb-[0.4rem] text-xl">{cat.title}</h2>
           <Table>
             <TableBody>
               {
                 cat.items.map((row) => (
                   <TableRow class="cheat-row" data-term={row.desc}>
-                    <TableCell class="cheat-keys"><code>{row.keys}</code></TableCell>
+                    <TableCell class="w-[34%] whitespace-nowrap">
+                      <code class="rounded border border-primary bg-primary/10 px-[0.4em] py-[0.1em] font-mono text-[0.85rem] text-primary">
+                        {row.keys}
+                      </code>
+                    </TableCell>
                     <TableCell>{row.desc}</TableCell>
                   </TableRow>
                 ))
@@ -174,8 +178,8 @@ const categories: Category[] = [
     if (!hint) {
       hint = document.createElement("p");
       hint.id = "cheat-noresult";
-      hint.className = "cheat-noresult";
-      document.querySelector(".container")?.appendChild(hint);
+      hint.className = "p-4 text-center text-muted-foreground";
+      document.getElementById("cheat-list")?.appendChild(hint);
     }
     hint.style.display = anyVisible ? "none" : "";
     hint.textContent = "일치하는 명령어가 없습니다.";

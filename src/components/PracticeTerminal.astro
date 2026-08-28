@@ -12,7 +12,8 @@ const { file, title = "vim 연습장", group = "" } = Astro.props;
   <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
     <h2 class="text-lg font-bold">{group ? `${group} 실습` : "실습"}</h2>
     <p class="text-sm text-muted-foreground">
-      에디터를 클릭한 뒤 키보드로 조작하세요. <code>i</code> 입력, <code>Esc</code> Normal, <code>:w</code> 저장(다운로드), <code>:q!</code> 강제 종료.
+      에디터를 클릭한 뒤 키보드로 조작하세요. <code class="font-mono">i</code> 입력, <code class="font-mono">Esc</code> Normal,
+      <code class="font-mono">:w</code> 저장(다운로드), <code class="font-mono">:q!</code> 강제 종료.
     </p>
   </div>
 

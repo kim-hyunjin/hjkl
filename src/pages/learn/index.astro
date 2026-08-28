@@ -7,13 +7,7 @@ const curriculum = (await getCollection("lessons")).sort((a, b) => a.data.order 
 ---
 
 <BaseLayout title="학습하기" current="/learn/">
-  <div class="container learn-page">
+  <div class="mx-auto w-full max-w-[1080px] px-5 pt-10">
     <EntryList items={curriculum} hrefPrefix="/learn" />
   </div>
 </BaseLayout>
-
-<style>
-  .learn-page {
-    padding-top: 2.5rem;
-  }
-</style>

@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Button } from "../../components/starwind/button";
 import PracticeTerminal from "../../components/PracticeTerminal.astro";
 import DetailHeader from "../../components/DetailHeader.astro";
-import { link } from "../../lib/site";
+import { link, PROSE_CLASS } from "../../lib/site";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -21,14 +21,14 @@ const next = idx >= 0 && idx < lessons.length - 1 ? lessons[idx + 1] : undefined
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.summary} current="/learn/">
-  <article class="detail container">
+  <article class="mx-auto w-full max-w-[1080px] px-5">
     <DetailHeader
       crumb={`${String(entry.data.order).padStart(2, "0")}강`}
       title={entry.data.title}
       summary={entry.data.summary}
       entryId={entry.id}
     />
-    <div class="prose">
+    <div class={PROSE_CLASS}>
       <Content />
     </div>
     {
@@ -36,7 +36,7 @@ const next = idx >= 0 && idx < lessons.length - 1 ? lessons[idx + 1] : undefined
         <PracticeTerminal file={entry.data.practiceFile ?? "lesson.md"} title={entry.data.title} />
       )
     }
-    <nav class="pager">
+    <nav class="mt-12 flex justify-between gap-4 border-t border-border pt-4">
       {prev ? <Button as="a" variant="ghost" href={link(`/learn/${prev.id}/`)}>← {prev.data.title}</Button> : <span></span>}
       {next ? <Button as="a" variant="ghost" href={link(`/learn/${next.id}/`)} data-pager-next>{next.data.title} →</Button> : <span></span>}
     </nav>

@@ -1,6 +1,5 @@
 ---
 import "@/styles/starwind.css";
-import "../styles/global.css";
 import { ThemeInitScript } from "@starwind-ui/astro/theme";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -21,7 +20,7 @@ const fullTitle = title === "홈" ? "hjkl — Vim 학습 사이트" : `${title} 
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,10 +31,12 @@ const fullTitle = title === "홈" ? "hjkl — Vim 학습 사이트" : `${title} 
     <title>{fullTitle}</title>
     <ThemeInitScript />
   </head>
-  <body>
-    <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <body class="min-h-screen font-sans text-base leading-[1.6]">
+    <a
+      class="absolute top-[-100%] left-4 z-100 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground focus:top-2"
+      href="#main">본문으로 건너뛰기</a>
     <Header current={current} />
-    <main id="main">
+    <main id="main" class="pb-16">
       <slot />
     </main>
     <Footer />

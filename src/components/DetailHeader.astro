@@ -12,19 +12,22 @@ interface Props {
 const { crumb, title, summary, entryId, badge } = Astro.props;
 ---
 
-<div class="detail-header" data-entry-id={entryId}>
-  <div class="crumb">{crumb}</div>
+<div
+  class="mb-8 flex flex-col gap-[0.6rem] border-b border-border pt-8 pb-6"
+  data-entry-id={entryId}
+>
+  <div class="text-[0.85rem] text-muted-foreground">{crumb}</div>
   {
     badge && (
-      <div class="detail-meta">
+      <div class="flex gap-2">
         <Badge variant="outline" class="border-primary text-primary">
           {badge}
         </Badge>
       </div>
     )
   }
-  <h1>{title}</h1>
-  <p class="detail-summary">{summary}</p>
+  <h1 class="m-0 text-[clamp(1.6rem,3vw,2.25rem)] leading-[1.25]">{title}</h1>
+  <p class="m-0 max-w-[60ch] text-[1.05rem] text-muted-foreground">{summary}</p>
 </div>
 
 <script>

@@ -10,27 +10,34 @@ const { current = "" } = Astro.props;
 const currentPath = current.split("?")[0];
 ---
 
-<header class="site-header">
-  <div class="container">
-    <nav class="nav" aria-label="주요 메뉴">
-      <a href={NAV_ITEMS[0].href} class="nav-brand" aria-label="hjkl 홈">
-        <span class="brand-mark">hjkl</span>
+<header class="sticky top-0 z-50 border-b border-border bg-background/88 backdrop-blur">
+  <div class="mx-auto w-full max-w-[1080px] px-5">
+    <nav class="flex flex-wrap items-center gap-4 py-[0.65rem]" aria-label="주요 메뉴">
+      <a
+        href={NAV_ITEMS[0].href}
+        class="flex items-center gap-2 text-[1.15rem] font-bold text-foreground hover:no-underline"
+        aria-label="hjkl 홈"
+      >
+        <span class="rounded-lg border border-primary bg-primary/12 px-[0.45rem] py-[0.1rem] font-mono text-[0.95rem] text-primary">hjkl</span>
         <span>Vim 학습</span>
       </a>
-      <div class="nav-links">
+      <div class="flex flex-wrap items-center gap-1 max-[760px]:order-3 max-[760px]:w-full">
         {
           NAV_ITEMS.map((item) => (
             <a
               href={item.href}
               aria-current={currentPath === item.href ? "page" : undefined}
-              class:list={[{ "nav-link-active": currentPath === item.href }]}
+              class:list={[
+                "rounded-lg px-[0.7rem] py-[0.35rem] text-[0.92rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground hover:no-underline",
+                { "bg-primary/12 text-primary hover:bg-primary/12 hover:text-primary": currentPath === item.href },
+              ]}
             >
               {item.label}
             </a>
           ))
         }
       </div>
-      <div class="nav-actions">
+      <div class="ml-auto flex items-center gap-2">
         <ThemeToggle ariaLabel="테마 전환" />
       </div>
     </nav>

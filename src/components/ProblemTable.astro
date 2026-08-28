@@ -28,7 +28,7 @@ const rows = items.map((entry, i) => {
 const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty === d));
 ---
 
-<div class="problem-toolbar">
+<div class="mt-6 flex flex-wrap items-center gap-[0.6rem]">
   <Input
     id="problem-search"
     type="search"
@@ -53,7 +53,7 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
   </NativeSelect>
 </div>
 
-<div class="problem-table-wrap">
+<div class="mt-4 rounded-lg border border-border">
   <Table>
     <TableHeader>
       <TableRow>
@@ -75,14 +75,18 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
             data-order-idx={index}
           >
             <TableCell class="text-center">
-              <span class="status-dot" data-complete={entry.id} aria-label="완료 여부" />
+              <span
+                class="inline-block size-[0.85rem] rounded-full border-2 border-border data-[done=true]:border-primary data-[done=true]:bg-primary"
+                data-complete={entry.id}
+                aria-label="완료 여부"
+              />
             </TableCell>
             <TableCell class="text-center">{String(index + 1).padStart(2, "0")}</TableCell>
             <TableCell class="whitespace-normal">
-              <a class="problem-link" href={link(`/problems/${entry.id}/`)}>
+              <a class="font-semibold text-foreground" href={link(`/problems/${entry.id}/`)}>
                 {entry.data.title}
               </a>
-              <p class="problem-summary">{entry.data.summary}</p>
+              <p class="mt-[0.15rem] text-[0.85rem] text-muted-foreground">{entry.data.summary}</p>
             </TableCell>
             <TableCell>
               <Badge variant="outline" class="border-primary text-primary">
@@ -90,7 +94,7 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
               </Badge>
             </TableCell>
             <TableCell class="whitespace-normal">
-              <div class="tag-list">
+              <div class="flex flex-wrap gap-[0.35rem]">
                 {entry.data.tags.map((tag) => (
                   <Badge tone="neutral" appearance="soft" size="sm">
                     {tag}
@@ -103,7 +107,7 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
       }
     </TableBody>
   </Table>
-  <p class="problem-noresult" id="problem-noresult" hidden>조건에 맞는 문제가 없습니다.</p>
+  <p class="m-0 px-4 py-6 text-center text-muted-foreground" id="problem-noresult" hidden>조건에 맞는 문제가 없습니다.</p>
 </div>
 
 <script>
@@ -124,7 +128,7 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
       const dot = row.querySelector<HTMLElement>("[data-complete]");
       const id = dot?.dataset.complete || "";
       const isDone = completed.has(id);
-      dot?.classList.toggle("is-done", isDone);
+      if (dot) dot.dataset.done = String(isDone);
       row.dataset.done = isDone ? "1" : "0";
     }
   };
@@ -175,56 +179,3 @@ const difficulties = difficultyOrder.filter((d) => rows.some((r) => r.difficulty
 
   refreshAll();
 </script>
-
-<style>
-  .problem-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: 1.5rem;
-  }
-
-  .problem-table-wrap {
-    margin-top: 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-
-  .status-dot {
-    display: inline-block;
-    width: 0.85rem;
-    height: 0.85rem;
-    border-radius: 999px;
-    border: 2px solid var(--border);
-  }
-
-  .status-dot.is-done {
-    border-color: var(--primary);
-    background: var(--primary);
-  }
-
-  .problem-link {
-    font-weight: 600;
-    color: var(--foreground);
-  }
-
-  .problem-summary {
-    margin: 0.15rem 0 0;
-    color: var(--muted-foreground);
-    font-size: 0.85rem;
-  }
-
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .problem-noresult {
-    margin: 0;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    color: var(--muted-foreground);
-  }
-</style>
