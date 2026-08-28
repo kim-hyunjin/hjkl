@@ -1,18 +1,19 @@
 ---
 interface Props {
+  /** 실습 파일 경로 (public/practice 기준), 예: "problems/problem05.md" */
   file: string;
+  /** 랜드마크 이름에 쓰이는 강의·문제 제목 */
   title?: string;
-  group?: string;
   label?: string;
 }
 
-const { file, title = "vim 연습장", group = "", label = "실습" } = Astro.props;
+const { file, title = "vim 연습장", label = "실습" } = Astro.props;
 ---
 
-<section class="mt-8" aria-label={`${group} ${title} ${label}`}>
-  <h2 class="mb-3 text-lg font-bold">{group ? `${group} ${label}` : label}</h2>
+<section class="mt-8" aria-label={`${title} ${label}`}>
+  <h2 class="mb-3 text-lg font-bold">{label}</h2>
 
-  <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file={file} data-title={title}>
+  <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file={file}>
     <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground">
       <span class="size-[11px] rounded-full bg-[#f85149]"></span>
       <span class="size-[11px] rounded-full bg-[#d29922]"></span>
