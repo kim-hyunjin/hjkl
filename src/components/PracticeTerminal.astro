@@ -3,14 +3,15 @@ interface Props {
   file: string;
   title?: string;
   group?: string;
+  label?: string;
 }
 
-const { file, title = "vim 연습장", group = "" } = Astro.props;
+const { file, title = "vim 연습장", group = "", label = "실습" } = Astro.props;
 ---
 
-<section class="mt-8" aria-label={`${group} ${title} 실습`}>
+<section class="mt-8" aria-label={`${group} ${title} ${label}`}>
   <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-    <h2 class="text-lg font-bold">{group ? `${group} 실습` : "실습"}</h2>
+    <h2 class="text-lg font-bold">{group ? `${group} ${label}` : label}</h2>
     <p class="text-sm text-muted-foreground">
       에디터를 클릭한 뒤 키보드로 조작하세요. <code class="font-mono">i</code> 입력, <code class="font-mono">Esc</code> Normal,
       <code class="font-mono">:w</code> 저장(다운로드), <code class="font-mono">:q!</code> 강제 종료.

@@ -37,16 +37,19 @@ const crumbSuffix = `${String(entry.data.order).padStart(2, "0")}번`;
     </div>
     {
       entry.data.practice && (
-        <PracticeTerminal file={entry.data.practiceFile ?? "problem.md"} title={entry.data.title} />
+        <PracticeTerminal
+          file={entry.data.practiceFile ?? "problem.md"}
+          title={entry.data.title}
+          label="문제 풀기"
+        />
       )
     }
     {
-      entry.data.hint && (
+      entry.data.answer && (
         <Collapsible.Root>
-          <Collapsible.Trigger>힌트 · 정답 보기</Collapsible.Trigger>
+          <Collapsible.Trigger>정답 확인</Collapsible.Trigger>
           <Collapsible.Panel>
-            <p>{entry.data.hint}</p>
-            {entry.data.answer && <pre>{entry.data.answer}</pre>}
+            <pre>{entry.data.answer}</pre>
           </Collapsible.Panel>
         </Collapsible.Root>
       )

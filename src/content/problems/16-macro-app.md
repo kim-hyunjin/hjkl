@@ -1,16 +1,14 @@
 ---
 title: "매크로로 줄 끝에 세미콜론 붙이기"
 summary: "매크로를 기록·재생해 여러 줄을 일괄 수정하는 챌린지입니다."
-order: 16
+order: 6
 difficulty: "중급"
 tags: ["매크로", "자동화"]
 practice: true
 practiceFile: "challenge06.md"
-hint: |
-  - `qa` → `A;<Esc>` → `j` → `q`
-  - 이후 `99@a` 또는 필요한 만큼 `@a`
 answer: |
-  gg qa A;<Esc> j q 99@a
+  gg qa A;<Esc>j q 99@a
+  → 마지막 줄에서는 j가 실패해 매크로가 자동으로 멈추므로 99처럼 넉넉한 횟수를 줘도 안전합니다.
 ---
 
 ## 목표
@@ -38,5 +36,3 @@ console.log(c);
 - 매크로(`qa`~`q`, `@a`) 사용
 - 한 줄씩 수동으로 붙이지 않기
 - 매크로는 상대 이동으로 구성(줄 번호 금지)
-
-> 완료 후 클리어 버튼을 눌러주세요.

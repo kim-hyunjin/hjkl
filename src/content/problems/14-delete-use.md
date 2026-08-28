@@ -1,16 +1,13 @@
 ---
 title: "정확한 삭제"
 summary: "텍스트 객체와 모션을 활용해 원하는 부분만 지우는 챌린지입니다."
-order: 14
+order: 4
 difficulty: "초급"
 tags: ["삭제", "텍스트 객체"]
 practice: true
 practiceFile: "challenge04.md"
-hint: |
-  - 태그 안 내용 삭제는 `dit`(delete inner tag)
-  - 커서를 `<span>` 안에 두고 `dit`
 answer: |
-  (커서를 span 안에) dit
+  (커서를 <span>old</span>의 "old" 위에 두고) dit
 ---
 
 ## 목표
@@ -31,6 +28,4 @@ answer: |
 
 - `<span>` 태그는 남겨야 합니다
 - `d`와 텍스트 객체를 사용
-- 커서는 어디에서 시작해도 무방
-
-> 완료 후 클리어 버튼을 눌러주세요.
+- `dit`는 커서가 있는 태그의 안쪽 내용을 지우므로, `<span>` 안에 커서를 두고 실행합니다

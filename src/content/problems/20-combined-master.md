@@ -1,19 +1,15 @@
 ---
 title: "종합 마스터 — 문서 정비"
 summary: "이동·치환·비주얼·매크로를 모두 활용해 문서를 정리하는 종합 챌린지입니다."
-order: 20
+order: 10
 difficulty: "고급"
 tags: ["종합"]
 practice: true
 practiceFile: "challenge10.md"
-hint: |
-  1. `:%s/\v^(todo|DONE):/\- [\1]/`… 대소문자를 먼저 통일
-  2. `:%s/\v([Tt]odo):/\- [ ] /` 등 단계적으로
-  3. 완료 줄을 블록 선택해 잘라내고 맨 아래에 붙이기
 answer: |
-  :%s/\v^\s*([Tt]odo):\s*/\- [ ] /
-  :%s/\v^\s*([Dd][Oo][Nn][Ee]):\s*/\- [x] /
-  (완료 줄을 V 선택 → dd → G → p)
+  :%s/\v^\s*([Tt]odo):\s*/- [ ] /
+  :%s/\v^\s*([Dd][Oo][Nn][Ee]):\s*/- [x] /
+  ("ship release" 줄로 이동 → dd → p로 "refactor module" 다음(= "clean desk" 앞)으로 이동)
 ---
 
 ## 목표
@@ -50,5 +46,3 @@ done: clean desk
 - 비주얼 블록, 치환, `dd`/`p` 모두 사용
 - `\c`(대소문자 무시) 사용 가능
 - 매크로는 선택 사항
-
-> 모든 조건을 처리하면 클리어! 종합 실력이 늘었는지 확인해보세요.

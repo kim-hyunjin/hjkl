@@ -35,7 +35,6 @@ const problems = defineCollection({
     difficulty: z.enum(['입문', '초급', '중급', '고급']),
     practice: z.boolean().default(false),
     practiceFile: z.string().optional(),
-    hint: z.string().optional(),
     answer: z.string().optional(),
   }),
   loader: baseLoader('problems'),

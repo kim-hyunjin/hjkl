@@ -1,5 +1,0 @@
-id,name,score
-1,Alice,95
-2,Bob,87
-3,Charlie,92
-4,Dana,88

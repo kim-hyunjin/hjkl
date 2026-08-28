@@ -1,19 +1,15 @@
 ---
 title: "마크로 빠르게 복귀"
 summary: "마크를 활용해 파일의 여러 위치를 오가는 챌린지입니다."
-order: 18
+order: 8
 difficulty: "중급"
 tags: ["마크"]
 practice: true
 practiceFile: "challenge08.md"
-hint: |
-  - `ma`로 현재 위치 마크
-  - `G`나 `}`를 이용해 아래로 이동
-  - `` `a ``로 복귀하면 위치(열)까지 정확히 돌아옵니다
 answer: |
   ma
-  G   (또는 } 이동)
-  `a
+  3j   → STRUCTURE END로 이동 (START 기준 3줄 아래)
+  `a   → 백틱 마크는 줄+열까지 정확히 복귀
 ---
 
 ## 목표
@@ -36,5 +32,3 @@ LINE D
 - 마크 `a` 사용
 - `` `a ``(백틱 a)로 정확한 위치 복귀
 - 화살표 금지
-
-> 완료 후 클리어 버튼을 눌러주세요.
