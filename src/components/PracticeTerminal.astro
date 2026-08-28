@@ -1,4 +1,6 @@
 ---
+import "@fontsource/jetbrains-mono/400.css";
+
 interface Props {
   /** 실습 파일 경로 (public/practice 기준), 예: "problems/problem05.md" */
   file: string;
@@ -126,7 +128,12 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   const theme = EditorView.theme({
     "&": { height: "100%", fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
     "&.cm-focused": { outline: "none" },
-    ".cm-scroller": { fontFamily: '"SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
+    // Normal 모드 블록 커서는 빈 줄에서 채울 문자가 없으면 NBSP(U+00A0)를 그 자리에
+    // 그려 넣는다(라이브러리 내부 동작, 커서 폭을 유지하기 위함). 이 글자의 실제
+    // 렌더링은 폰트에 달려 있어서, OS 시스템 폰트에 기대면(SFMono/Menlo는 macOS
+    // 전용이라 다른 OS에서는 임의의 monospace로 대체된다) 일부 폰트에서 그 자리에
+    // 점·상자 같은 게 보일 수 있다. 웹폰트를 번들해 항상 같은 폰트로 렌더링한다.
+    ".cm-scroller": { fontFamily: '"JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
     ".cm-content": { caretColor: "#f0f6fc" },
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#f0f6fc" },
     ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, & ::selection": { backgroundColor: "#264f78 !important" },
