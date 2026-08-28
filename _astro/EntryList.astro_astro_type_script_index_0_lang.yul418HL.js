@@ -1,0 +1,1 @@
+import{n as e}from"./progress.CJpVWJz7.js";var t=()=>{let t=e();document.querySelectorAll(`[data-complete]`).forEach(e=>{let n=e.dataset.complete||``;e.dataset.done=String(t.has(n))})};t(),window.addEventListener(`hjkl:progress`,t);
