@@ -1,1 +1,0 @@
-setTimeout(delay, callback);
