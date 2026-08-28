@@ -1,4 +1,6 @@
 ---
+import "@fontsource/jetbrains-mono/400.css";
+
 interface Props {
   /** 실습 파일 경로 (public/practice 기준), 예: "problems/problem05.md" */
   file: string;
@@ -106,9 +108,15 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   Vim.setOption("pcre", false);
 
   // Normal/Visual 모드에서 DOM으로 직접 들어오는 입력을 무시한다.
-  // 키 이벤트는 vim 키맵이 가로채지만 IME 조합 확정·모바일 키보드·insertText는
-  // keydown 없이 도착해 vim 키맵을 지나치므로, Normal 모드인데도 글자가 삽입된다.
-  // vim 명령이 만드는 편집은 view.dispatch로 들어와 이 핸들러를 타지 않는다.
+  // 키 이벤트는 vim 키맵이 가로채지만 일부 DOM 입력은 keydown 없이 도착해 vim
+  // 키맵을 지나치므로, Normal 모드인데도 글자가 삽입될 수 있다. vim 명령이 만드는
+  // 편집은 view.dispatch로 들어와 이 핸들러를 타지 않는다.
+  //
+  // 주의: @replit/codemirror-vim은 IME 조합을 vim 키 입력으로 변환하는 자체
+  // inputHandler를 갖고 있다(라이브러리 소스의 `useNextTextInput` 처리, forceEndComposition
+  // 참고). extensions 배열에서 이 가드를 vim() 뒤에 둬야 한다 — CM6는 inputHandler들을
+  // 등록 순서대로 .some()으로 실행해 먼저 true를 반환한 쪽에서 멈추므로, 이 가드가 먼저
+  // 오면 라이브러리의 조합 처리 로직이 아예 실행되지 못한다.
   const blockInputOutsideInsertMode = EditorView.inputHandler.of((view) => {
     const vimState = getCM(view)?.state?.vim;
     return !!vimState && !vimState.insertMode;
@@ -120,7 +128,12 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   const theme = EditorView.theme({
     "&": { height: "100%", fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
     "&.cm-focused": { outline: "none" },
-    ".cm-scroller": { fontFamily: '"SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
+    // Normal 모드 블록 커서는 빈 줄에서 채울 문자가 없으면 NBSP(U+00A0)를 그 자리에
+    // 그려 넣는다(라이브러리 내부 동작, 커서 폭을 유지하기 위함). 이 글자의 실제
+    // 렌더링은 폰트에 달려 있어서, OS 시스템 폰트에 기대면(SFMono/Menlo는 macOS
+    // 전용이라 다른 OS에서는 임의의 monospace로 대체된다) 일부 폰트에서 그 자리에
+    // 점·상자 같은 게 보일 수 있다. 웹폰트를 번들해 항상 같은 폰트로 렌더링한다.
+    ".cm-scroller": { fontFamily: '"JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
     ".cm-content": { caretColor: "#f0f6fc" },
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#f0f6fc" },
     ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, & ::selection": { backgroundColor: "#264f78 !important" },
@@ -165,7 +178,7 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
 
     const view = new EditorView({
       doc: "",
-      extensions: [blockInputOutsideInsertMode, vim({ status: true }), basicSetup, EditorView.lineWrapping, theme],
+      extensions: [vim({ status: true }), blockInputOutsideInsertMode, basicSetup, EditorView.lineWrapping, theme],
       parent: host,
     });
 
