@@ -1,4 +1,6 @@
-apple
-banana
-cherry
-date
+LINE A
+STRUCTURE START
+LINE B
+LINE C
+STRUCTURE END
+LINE D

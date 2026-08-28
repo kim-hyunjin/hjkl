@@ -1,4 +1,6 @@
-API_URL=http://localhost:3000
-DEBUG=true
-DB_HOST=localhost
-DB_PORT=5432
+function check(x) {
+if (x > 0) {
+      return "positive";
+}
+    return "non-positive";
+}

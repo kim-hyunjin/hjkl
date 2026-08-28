@@ -1,6 +1,8 @@
-const config = {
-  host: "localhost"
-  port: 8080
-  timeout: 3000
-  debug: true
-};
+{
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "lodash": "^4.17.21",
+    "axios": "^0.21.1"
+  }
+}

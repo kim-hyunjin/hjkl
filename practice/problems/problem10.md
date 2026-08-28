@@ -1,5 +1,6 @@
-todo: buy milk
-todo: write code
-DONE: ship release
-todo: refactor module
-done: clean desk
+{
+  "name": "hjkl-app",
+  "version": "1.0.0",
+  "env": "development",
+  "port": 3000
+}

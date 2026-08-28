@@ -1,6 +1,7 @@
-{
-  "name": "hjkl-app",
-  "version": "1.0.0",
-  "env": "development",
-  "port": 3000
+function greet(name) {
+<<<<<<< HEAD
+  console.log("Hi " + name);
+=======
+  console.log("Hello, " + name + "!");
+>>>>>>> feature/greeting
 }
