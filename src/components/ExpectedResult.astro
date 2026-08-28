@@ -1,0 +1,21 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<pre
+  class="cursor-default overflow-x-auto rounded-lg border border-border bg-muted p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap select-none"
+  data-expected-result
+  aria-label="예상 결과 (복사 불가)"
+>{text}</pre>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-expected-result]").forEach((el) => {
+    for (const type of ["copy", "cut", "contextmenu", "dragstart"]) {
+      el.addEventListener(type, (event) => event.preventDefault());
+    }
+  });
+</script>

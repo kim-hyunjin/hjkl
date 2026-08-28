@@ -1,0 +1,13 @@
+{
+  "title": "레지스터로 줄 순서 바꾸기",
+  "summary": "레지스터를 활용해 두 줄을 안전하게 교환하는 챌린지입니다.",
+  "order": 8,
+  "difficulty": "고급",
+  "tags": [
+    "레지스터"
+  ],
+  "description": "## 목표\n\n다음 두 줄의 순서를 바꾸세요.\n\n```\nfirst\nsecond\n```\n\n결과:\n\n```\nsecond\nfirst\n```\n\n## 조건\n\n- 이름 있는 레지스터(`\"a` 등)에 담아서 처리\n- `p`/`P`로 붙여넣기\n- 삭제 후 내용을 잃지 않아야 함",
+  "initialContent": "first\nsecond",
+  "expected": "second\nfirst",
+  "hint": "\"a, p"
+}

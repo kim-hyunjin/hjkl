@@ -1,0 +1,14 @@
+{
+  "title": "매크로로 줄 끝에 세미콜론 붙이기",
+  "summary": "매크로를 기록·재생해 여러 줄을 일괄 수정하는 챌린지입니다.",
+  "order": 5,
+  "difficulty": "중급",
+  "tags": [
+    "매크로",
+    "자동화"
+  ],
+  "description": "## 목표\n\n다음 코드에서 **모든 실행문의 끝**에 세미콜론을 붙이세요.\n\n```js\nconst a = 1\nconst b = 2\nconst c = a + b\nconsole.log(c)\n```\n\n결과:\n\n```js\nconst a = 1;\nconst b = 2;\nconst c = a + b;\nconsole.log(c);\n```\n\n## 조건\n\n- 매크로(`qa`~`q`, `@a`) 사용\n- 한 줄씩 수동으로 붙이지 않기\n- 매크로는 상대 이동으로 구성(줄 번호 금지)",
+  "initialContent": "const a = 1\nconst b = 2\nconst c = a + b\nconsole.log(c)",
+  "expected": "const a = 1;\nconst b = 2;\nconst c = a + b;\nconsole.log(c);",
+  "hint": "qa...q, @a"
+}

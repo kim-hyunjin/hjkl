@@ -9,15 +9,25 @@ const entry = z.object({
   tags: z.array(z.string()).default([]),
 });
 
-const baseLoader = (folder: string) =>
+const stripExtension = (extension: string) => (entry: string) => {
+  const base = entry.replace(/\\/g, '/').split('/').pop() ?? entry;
+  return base.replace(new RegExp(`\\.${extension}$`), '');
+};
+
+const markdownLoader = (folder: string) =>
   glob({
     pattern: `${folder}/*.md`,
     base: './src/content',
-    generateId: ({ entry }) => {
-      // entry is "folder/01-name.md" → use "01-name" (strip folder prefix)
-      const base = entry.replace(/\\/g, '/').split('/').pop() ?? entry;
-      return base.replace(/\.md$/, '');
-    },
+    // entry is "folder/01-name.md" → use "01-name" (strip folder prefix)
+    generateId: ({ entry }) => stripExtension('md')(entry),
+  });
+
+const jsonLoader = (folder: string) =>
+  glob({
+    pattern: `${folder}/*.json`,
+    base: './src/content',
+    // entry is "folder/01-name.json" → use "01-name" (strip folder prefix)
+    generateId: ({ entry }) => stripExtension('json')(entry),
   });
 
 const lessons = defineCollection({
@@ -26,18 +36,19 @@ const lessons = defineCollection({
     practice: z.boolean().default(false),
     practiceFile: z.string().optional(),
   }),
-  loader: baseLoader('lessons'),
+  loader: markdownLoader('lessons'),
 });
 
 const problems = defineCollection({
   type: 'content_layer',
   schema: entry.extend({
     difficulty: z.enum(['입문', '초급', '중급', '고급']),
-    practice: z.boolean().default(false),
-    practiceFile: z.string().optional(),
-    answer: z.string().optional(),
+    description: z.string(),
+    initialContent: z.string(),
+    expected: z.string(),
+    hint: z.string(),
   }),
-  loader: baseLoader('problems'),
+  loader: jsonLoader('problems'),
 });
 
 export const collections = { lessons, problems };

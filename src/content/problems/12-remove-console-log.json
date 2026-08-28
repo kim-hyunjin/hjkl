@@ -1,0 +1,14 @@
+{
+  "title": "디버그용 console.log 일괄 제거",
+  "summary": "커밋 전에 잊고 남긴 console.log를 명령어 한 줄로 모두 지우는 챌린지입니다.",
+  "order": 12,
+  "difficulty": "중급",
+  "tags": [
+    "전역 명령",
+    "실무"
+  ],
+  "description": "## 목표\n\n다음 코드에서 디버깅용으로 남긴 `console.log` 줄을 모두 제거하세요.\n\n```js\nfunction total(a, b) {\n  console.log(\"a:\", a);\n  console.log(\"b:\", b);\n  const sum = a + b;\n  console.log(\"sum:\", sum);\n  return sum;\n}\n```\n\n결과:\n\n```js\nfunction total(a, b) {\n  const sum = a + b;\n  return sum;\n}\n```\n\n## 조건\n\n- 한 줄씩 `dd`로 지우지 말고 `:g/패턴/d` 전역 명령 사용\n- `console.log`가 아닌 줄(`const sum`, `return sum` 등)은 그대로 유지",
+  "initialContent": "function total(a, b) {\n  console.log(\"a:\", a);\n  console.log(\"b:\", b);\n  const sum = a + b;\n  console.log(\"sum:\", sum);\n  return sum;\n}",
+  "expected": "function total(a, b) {\n  const sum = a + b;\n  return sum;\n}",
+  "hint": ":g/.../d"
+}

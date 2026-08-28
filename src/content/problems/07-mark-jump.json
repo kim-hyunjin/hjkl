@@ -1,0 +1,13 @@
+{
+  "title": "마크로 빠르게 복귀",
+  "summary": "마크를 활용해 파일의 여러 위치를 오가는 챌린지입니다.",
+  "order": 7,
+  "difficulty": "중급",
+  "tags": [
+    "마크"
+  ],
+  "description": "## 목표\n\n다음 텍스트에서 `START`에 마크를 걸고, `END`로 이동한 뒤 다시 `START`로 복귀해서 `x`로 그 줄의 첫 글자를 지워 표시하세요.\n\n```\nLINE A\nSTRUCTURE START\nLINE B\nLINE C\nSTRUCTURE END\nLINE D\n```\n\n커서가 `STRUCTURE START` 줄에 있을 때 시작합니다.\n\n## 조건\n\n- 마크 `a` 사용\n- `` `a ``(백틱 a)로 정확한 위치 복귀\n- 화살표 금지\n- 복귀 후에는 `x`로 첫 글자 한 개만 지우기",
+  "initialContent": "LINE A\nSTRUCTURE START\nLINE B\nLINE C\nSTRUCTURE END\nLINE D",
+  "expected": "LINE A\nTRUCTURE START\nLINE B\nLINE C\nSTRUCTURE END\nLINE D",
+  "hint": "ma, `a, x"
+}

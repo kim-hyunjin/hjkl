@@ -1,0 +1,14 @@
+{
+  "title": "git 충돌 마커 정리",
+  "summary": "머지 충돌 마커를 지우고 원하는 쪽 코드만 남기는, 실무에서 매일 만나는 챌린지입니다.",
+  "order": 11,
+  "difficulty": "중급",
+  "tags": [
+    "삭제",
+    "실무"
+  ],
+  "description": "## 목표\n\n다음은 머지 충돌이 발생한 파일입니다.\n\n```\nfunction greet(name) {\n<<<<<<< HEAD\n  console.log(\"Hi \" + name);\n=======\n  console.log(\"Hello, \" + name + \"!\");\n>>>>>>> feature/greeting\n}\n```\n\n`feature/greeting` 쪽 코드만 남기고 충돌 마커(`<<<<<<<`, `=======`, `>>>>>>>`)와 `HEAD` 쪽 코드를 모두 삭제하세요.\n\n결과:\n\n```\nfunction greet(name) {\n  console.log(\"Hello, \" + name + \"!\");\n}\n```\n\n## 조건\n\n- 검색(`/`)으로 마커 줄을 찾아 이동\n- `dd` 또는 범위 삭제(`d/패턴<CR>`)로 불필요한 줄 제거\n- 남기려는 코드 줄은 수정하지 않기",
+  "initialContent": "function greet(name) {\n<<<<<<< HEAD\n  console.log(\"Hi \" + name);\n=======\n  console.log(\"Hello, \" + name + \"!\");\n>>>>>>> feature/greeting\n}",
+  "expected": "function greet(name) {\n  console.log(\"Hello, \" + name + \"!\");\n}",
+  "hint": "/, dd"
+}

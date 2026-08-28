@@ -1,0 +1,14 @@
+{
+  "title": "단어 점프",
+  "summary": "w/b/e로 문장을 탐색하며 특정 단어로 이동하는 챌린지입니다.",
+  "order": 3,
+  "difficulty": "초급",
+  "tags": [
+    "이동",
+    "단어"
+  ],
+  "description": "## 목표\n\n다음 문장에서 커서를 `target`으로 이동한 뒤, `x`로 `target`의 첫 글자를 지워 도착했음을 표시하세요.\n\n```\nvim makes editing text fast and target friendly power\n```\n\n커서는 문장 맨 앞(`vim`의 `v`)에 있습니다.\n\n## 조건\n\n- `w` / `b` / `e`만 사용(문자 이동, 숫자 이동은 허용)\n- `f`/`t` 사용 금지\n- 도착 후에는 `x`로 첫 글자 한 개만 지우기",
+  "initialContent": "vim makes editing text fast and target friendly power",
+  "expected": "vim makes editing text fast and arget friendly power",
+  "hint": "w, x"
+}

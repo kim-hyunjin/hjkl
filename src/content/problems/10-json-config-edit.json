@@ -1,0 +1,14 @@
+{
+  "title": "JSON 설정 값 수정",
+  "summary": "실무에서 자주 만나는 JSON 설정 파일의 값을 텍스트 객체로 빠르게 바꾸는 챌린지입니다.",
+  "order": 10,
+  "difficulty": "초급",
+  "tags": [
+    "텍스트 객체",
+    "설정 파일"
+  ],
+  "description": "## 목표\n\n다음 설정 파일을 수정하세요.\n\n```json\n{\n  \"name\": \"hjkl-app\",\n  \"version\": \"1.0.0\",\n  \"env\": \"development\",\n  \"port\": 3000\n}\n```\n\n`env`를 `\"production\"`으로, `port`를 `8080`으로 바꾸세요.\n\n결과:\n\n```json\n{\n  \"name\": \"hjkl-app\",\n  \"version\": \"1.0.0\",\n  \"env\": \"production\",\n  \"port\": 8080\n}\n```\n\n## 조건\n\n- 문자열 값은 `ci\"`(따옴표 안쪽)로 교체\n- 숫자 값은 `ciw`(단어 안쪽)로 교체\n- 키(`\"env\"`, `\"port\"`)와 콤마, 중괄호는 건드리지 않기",
+  "initialContent": "{\n  \"name\": \"hjkl-app\",\n  \"version\": \"1.0.0\",\n  \"env\": \"development\",\n  \"port\": 3000\n}",
+  "expected": "{\n  \"name\": \"hjkl-app\",\n  \"version\": \"1.0.0\",\n  \"env\": \"production\",\n  \"port\": 8080\n}",
+  "hint": "ci\", ciw"
+}

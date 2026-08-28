@@ -1,0 +1,14 @@
+{
+  "title": "깨진 들여쓰기 정리",
+  "summary": "코드 리뷰에서 자주 지적받는 들여쓰기 불일치를 명령 모드로 빠르게 맞추는 챌린지입니다.",
+  "order": 14,
+  "difficulty": "중급",
+  "tags": [
+    "들여쓰기",
+    "실무"
+  ],
+  "description": "## 목표\n\n다음 코드는 들여쓰기가 뒤죽박죽입니다.\n\n```js\nfunction check(x) {\nif (x > 0) {\n      return \"positive\";\n}\n    return \"non-positive\";\n}\n```\n\n들여쓰기 폭 2칸 기준으로 정리하세요.\n\n결과:\n\n```js\nfunction check(x) {\n  if (x > 0) {\n    return \"positive\";\n  }\n  return \"non-positive\";\n}\n```\n\n## 조건\n\n- `>>`, `<<`(또는 개수 지정 `2>>`)로 줄 단위 들여쓰기 조정\n- 코드 내용(문자열, 키워드)은 수정하지 않기\n- 한 글자씩 스페이스를 지우거나 추가하지 않기",
+  "initialContent": "function check(x) {\nif (x > 0) {\n      return \"positive\";\n}\n    return \"non-positive\";\n}",
+  "expected": "function check(x) {\n  if (x > 0) {\n    return \"positive\";\n  }\n  return \"non-positive\";\n}",
+  "hint": ">>, <<"
+}

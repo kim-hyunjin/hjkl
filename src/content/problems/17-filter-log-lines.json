@@ -1,0 +1,14 @@
+{
+  "title": "로그에서 ERROR만 남기기",
+  "summary": "장애 분석 시 방대한 로그에서 원하는 패턴만 남기고 나머지를 지우는 챌린지입니다.",
+  "order": 17,
+  "difficulty": "고급",
+  "tags": [
+    "전역 명령",
+    "정규식"
+  ],
+  "description": "## 목표\n\n다음 로그에서 `ERROR`가 포함된 줄만 남기고 나머지는 모두 지우세요.\n\n```\n[INFO] server started\n[DEBUG] cache warm\n[ERROR] db connection failed\n[INFO] retrying request\n[ERROR] timeout waiting for response\n[DEBUG] gc run complete\n```\n\n결과:\n\n```\n[ERROR] db connection failed\n[ERROR] timeout waiting for response\n```\n\n## 조건\n\n- `:v/패턴/d`(또는 `:g!/패턴/d`)로 매치되지 않는 줄을 한 번에 삭제\n- `ERROR` 줄을 하나씩 골라 남기는 방식(반대로 지우는 방식) 사용 금지",
+  "initialContent": "[INFO] server started\n[DEBUG] cache warm\n[ERROR] db connection failed\n[INFO] retrying request\n[ERROR] timeout waiting for response\n[DEBUG] gc run complete",
+  "expected": "[ERROR] db connection failed\n[ERROR] timeout waiting for response",
+  "hint": ":v/.../d"
+}

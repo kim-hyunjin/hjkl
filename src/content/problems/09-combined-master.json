@@ -1,0 +1,13 @@
+{
+  "title": "종합 마스터 — 문서 정비",
+  "summary": "이동·치환·비주얼·매크로를 모두 활용해 문서를 정리하는 종합 챌린지입니다.",
+  "order": 9,
+  "difficulty": "고급",
+  "tags": [
+    "종합"
+  ],
+  "description": "## 목표\n\n다음 문서를 아래 규칙에 맞게 정리하세요.\n\n```\ntodo: buy milk\ntodo: write code\nDONE: ship release\ntodo: refactor module\ndone: clean desk\n```\n\n규칙:\n\n1. 모든 줄 앞에 `- ` 붙이기\n2. `todo`는 `[ ]`, `done`/`DONE`은 `[x]`로 표기\n3. 대소문자 무시\n4. 완료 항목을 문서 맨 아래로 이동\n\n예상 결과:\n\n```\n- [ ] buy milk\n- [ ] write code\n- [ ] refactor module\n- [x] ship release\n- [x] clean desk\n```\n\n## 조건\n\n- 비주얼 블록, 치환, `dd`/`p` 모두 사용\n- 대소문자가 섞인 `done`/`DONE`은 `[Dd][Oo][Nn][Ee]` 같은 문자 클래스로 처리\n- 매크로는 선택 사항",
+  "initialContent": "todo: buy milk\ntodo: write code\nDONE: ship release\ntodo: refactor module\ndone: clean desk",
+  "expected": "- [ ] buy milk\n- [ ] write code\n- [ ] refactor module\n- [x] ship release\n- [x] clean desk",
+  "hint": ":%s///, dd, p"
+}

@@ -1,0 +1,14 @@
+{
+  "title": ".env 파일 값 교체",
+  "summary": "배포 환경에 맞춰 .env 파일의 값만 정확히 바꾸는 챌린지입니다.",
+  "order": 13,
+  "difficulty": "초급",
+  "tags": [
+    "검색",
+    "텍스트 객체"
+  ],
+  "description": "## 목표\n\n다음 `.env` 파일을 프로덕션 값으로 바꾸세요.\n\n```\nAPI_URL=http://localhost:3000\nDEBUG=true\nDB_HOST=localhost\nDB_PORT=5432\n```\n\n`API_URL`을 `https://api.example.com`으로, `DEBUG`를 `false`로 바꾸세요.\n\n결과:\n\n```\nAPI_URL=https://api.example.com\nDEBUG=false\nDB_HOST=localhost\nDB_PORT=5432\n```\n\n## 조건\n\n- `DB_HOST`, `DB_PORT` 줄은 수정하지 않기\n- `=` 뒤의 값만 지우고 새로 입력(키 이름 유지)\n- 줄 전체를 지우고 다시 치지 않기",
+  "initialContent": "API_URL=http://localhost:3000\nDEBUG=true\nDB_HOST=localhost\nDB_PORT=5432",
+  "expected": "API_URL=https://api.example.com\nDEBUG=false\nDB_HOST=localhost\nDB_PORT=5432",
+  "hint": "f=, c$, ciw"
+}

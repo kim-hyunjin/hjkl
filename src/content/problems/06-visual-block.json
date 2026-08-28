@@ -1,0 +1,13 @@
+{
+  "title": "비주얼 블록으로 동시 편집",
+  "summary": "여러 줄의 같은 위치를 블록 편집으로 한 번에 바꾸는 챌린지입니다.",
+  "order": 6,
+  "difficulty": "중급",
+  "tags": [
+    "비주얼 블록"
+  ],
+  "description": "## 목표\n\n다음 목록의 각 항목 앞에 `- `를 붙이세요.\n\n```\napple\nbanana\ncherry\ndate\n```\n\n결과:\n\n```\n- apple\n- banana\n- cherry\n- date\n```\n\n## 조건\n\n- `Ctrl+v` 블록 비주얼 모드 사용\n- `I`(블록 시작 삽입) 사용\n- 화살표 금지",
+  "initialContent": "apple\nbanana\ncherry\ndate",
+  "expected": "- apple\n- banana\n- cherry\n- date",
+  "hint": "Ctrl-v, I"
+}

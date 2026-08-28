@@ -7,14 +7,18 @@ interface Props {
   summary: string;
   entryId: string;
   badge?: string;
+  /** "다음" 버튼 클릭만으로 완료 처리할지 여부. 실제 정답 제출로 완료를 판정하는
+   * 페이지(문제 풀이)에서는 false로 꺼서 클릭만으로 완료 처리되지 않게 한다. */
+  trackNextComplete?: boolean;
 }
 
-const { crumb, title, summary, entryId, badge } = Astro.props;
+const { crumb, title, summary, entryId, badge, trackNextComplete = true } = Astro.props;
 ---
 
 <div
   class="mb-8 flex flex-col gap-[0.6rem] border-b border-border pt-8 pb-6"
   data-entry-id={entryId}
+  data-track-next-complete={trackNextComplete}
 >
   <div class="text-[0.85rem] text-muted-foreground">{crumb}</div>
   {
@@ -35,7 +39,7 @@ const { crumb, title, summary, entryId, badge } = Astro.props;
 
   const header = document.querySelector<HTMLElement>("[data-entry-id]");
   const nextLink = document.querySelector<HTMLAnchorElement>("[data-pager-next]");
-  if (header && nextLink) {
+  if (header && nextLink && header.dataset.trackNextComplete !== "false") {
     const id = header.dataset.entryId || "";
     nextLink.addEventListener("click", () => markComplete(id), { once: true });
   }

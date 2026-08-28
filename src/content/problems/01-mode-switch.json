@@ -1,0 +1,13 @@
+{
+  "title": "모드 전환 마스터",
+  "summary": "Normal/Insert 모드를 오가는 기본기를 10초 안에 처리하는 챌린지입니다.",
+  "order": 1,
+  "difficulty": "입문",
+  "tags": [
+    "모드"
+  ],
+  "description": "## 목표\n\n주어진 텍스트를 다음 상태로 바꾸세요.\n\n```\n시작:\napple banana cherry\n\n목표:\napple banana cherry juice\n```\n\n`cherry` 뒤에 ` juice`를 추가하고 Normal 모드로 돌아와야 합니다.\n\n## 조건\n\n- 화살표 키 사용 금지\n- `hjkl`과 `A`(또는 `a`)만 사용\n- 마지막에는 반드시 Normal 모드(`<Esc>` 상태)로 마칠 것",
+  "initialContent": "apple banana cherry",
+  "expected": "apple banana cherry juice",
+  "hint": "$, A"
+}
