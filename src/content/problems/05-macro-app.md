@@ -5,7 +5,7 @@ order: 5
 difficulty: "중급"
 tags: ["매크로", "자동화"]
 practice: true
-practiceFile: "problems/problem06.md"
+practiceFile: "problems/problem05.md"
 answer: |
   gg qa A;<Esc>j q 3@a
   → 첫 줄은 기록하면서 처리되므로, 남은 세 줄만큼 3@a로 재생합니다.

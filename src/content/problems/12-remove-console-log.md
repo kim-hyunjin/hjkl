@@ -5,7 +5,7 @@ order: 12
 difficulty: "중급"
 tags: ["전역 명령", "실무"]
 practice: true
-practiceFile: "problems/problem13.md"
+practiceFile: "problems/problem12.md"
 answer: |
   :g/console\.log/d
   (패턴에 매치하는 모든 줄을 한 번에 삭제합니다)

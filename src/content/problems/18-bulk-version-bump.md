@@ -5,7 +5,7 @@ order: 18
 difficulty: "고급"
 tags: ["치환", "정규식"]
 practice: true
-practiceFile: "problems/problem20.md"
+practiceFile: "problems/problem18.md"
 answer: |
   :%s/\^17\.0\.2/^18.2.0/g
   (같은 버전 문자열을 쓰는 react, react-dom만 한 번에 바뀌고, lodash·axios는 그대로 유지됩니다)

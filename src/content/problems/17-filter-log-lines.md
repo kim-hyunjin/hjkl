@@ -5,7 +5,7 @@ order: 17
 difficulty: "고급"
 tags: ["전역 명령", "정규식"]
 practice: true
-practiceFile: "problems/problem19.md"
+practiceFile: "problems/problem17.md"
 answer: |
   :v/ERROR/d
   (또는 :g!/ERROR/d — "ERROR"를 포함하지 않는 모든 줄을 삭제)

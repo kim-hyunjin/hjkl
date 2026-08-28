@@ -5,7 +5,7 @@ order: 11
 difficulty: "중급"
 tags: ["삭제", "실무"]
 practice: true
-practiceFile: "problems/problem12.md"
+practiceFile: "problems/problem11.md"
 answer: |
   /<<<<<<<<CR>     " 상단 마커로 이동
   dd dd dd          " <<<<<<< HEAD, HEAD 쪽 코드, ======= 세 줄 삭제

@@ -5,7 +5,7 @@ order: 6
 difficulty: "중급"
 tags: ["비주얼 블록"]
 practice: true
-practiceFile: "problems/problem07.md"
+practiceFile: "problems/problem06.md"
 answer: |
   gg Ctrl+v 3j I - <Esc>
 ---

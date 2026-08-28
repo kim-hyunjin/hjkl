@@ -5,7 +5,7 @@ order: 10
 difficulty: "초급"
 tags: ["텍스트 객체", "설정 파일"]
 practice: true
-practiceFile: "problems/problem11.md"
+practiceFile: "problems/problem10.md"
 answer: |
   /development<CR> ci" production<Esc>
   /3000<CR> ciw 8080<Esc>

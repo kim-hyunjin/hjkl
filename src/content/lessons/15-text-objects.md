@@ -4,7 +4,7 @@ summary: "단어, 문장, 괄호, 따옴표 등 구조 단위로 편집하는 �
 order: 15
 tags: ["텍스트 객체"]
 practice: true
-practiceFile: "lessons/textobj.md"
+practiceFile: "lessons/lesson15.md"
 ---
 
 ## 텍스트 객체란

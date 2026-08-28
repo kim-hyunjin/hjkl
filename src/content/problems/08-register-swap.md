@@ -5,7 +5,7 @@ order: 8
 difficulty: "고급"
 tags: ["레지스터"]
 practice: true
-practiceFile: "problems/problem09.md"
+practiceFile: "problems/problem08.md"
 answer: |
   gg "add "ap
   → 레지스터 a에 "first"를 담아 삭제하면 "second"만 남고,

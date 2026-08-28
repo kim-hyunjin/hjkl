@@ -1,7 +1,7 @@
-function greet(name) {
-<<<<<<< HEAD
-  console.log("Hi " + name);
-=======
-  console.log("Hello, " + name + "!");
->>>>>>> feature/greeting
+function total(a, b) {
+  console.log("a:", a);
+  console.log("b:", b);
+  const sum = a + b;
+  console.log("sum:", sum);
+  return sum;
 }

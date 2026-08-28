@@ -5,7 +5,7 @@ order: 14
 difficulty: "중급"
 tags: ["들여쓰기", "실무"]
 practice: true
-practiceFile: "problems/problem15.md"
+practiceFile: "problems/problem14.md"
 answer: |
   :set shiftwidth=2
   gg

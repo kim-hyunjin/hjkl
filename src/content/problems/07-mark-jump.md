@@ -5,7 +5,7 @@ order: 7
 difficulty: "중급"
 tags: ["마크"]
 practice: true
-practiceFile: "problems/problem08.md"
+practiceFile: "problems/problem07.md"
 answer: |
   ma
   3j   → STRUCTURE END로 이동 (START 기준 3줄 아래)

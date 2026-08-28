@@ -1,7 +1,4 @@
-function total(a, b) {
-  console.log("a:", a);
-  console.log("b:", b);
-  const sum = a + b;
-  console.log("sum:", sum);
-  return sum;
-}
+API_URL=http://localhost:3000
+DEBUG=true
+DB_HOST=localhost
+DB_PORT=5432

@@ -5,7 +5,7 @@ order: 19
 difficulty: "고급"
 tags: ["치환", "정규식"]
 practice: true
-practiceFile: "problems/problem21.md"
+practiceFile: "problems/problem19.md"
 answer: |
   :%s/^const \(.*\) = require(\(.*\));$/import \1 from \2;/
   (\1은 좌변 바인딩 형태 전체를 그대로 캡처하므로 기본 import든 구조 분해든
