@@ -55,8 +55,24 @@ const crumbSuffix = `${String(entry.data.order).padStart(2, "0")}번`;
       )
     }
     <nav class="mt-12 flex justify-between gap-4 border-t border-border pt-4">
-      {prev ? <Button as="a" variant="ghost" href={link(`/problems/${prev.id}/`)}>← {prev.data.title}</Button> : <span></span>}
-      {next ? <Button as="a" variant="ghost" href={link(`/problems/${next.id}/`)} data-pager-next>{next.data.title} →</Button> : <span></span>}
+      {
+        prev ? (
+          <Button as="a" variant="ghost" class="min-w-0 max-w-[calc(50%-0.5rem)]" href={link(`/problems/${prev.id}/`)}>
+            <span class="truncate">← {prev.data.title}</span>
+          </Button>
+        ) : (
+          <span></span>
+        )
+      }
+      {
+        next ? (
+          <Button as="a" variant="ghost" class="min-w-0 max-w-[calc(50%-0.5rem)]" href={link(`/problems/${next.id}/`)} data-pager-next>
+            <span class="truncate">{next.data.title} →</span>
+          </Button>
+        ) : (
+          <span></span>
+        )
+      }
     </nav>
   </article>
 </BaseLayout>
