@@ -1,7 +1,7 @@
 ---
 title: "함수 호출 인자 순서 바꾸기"
 summary: "API 시그니처가 바뀌어 인자 순서를 맞바꿔야 하는, 실무에서 흔한 상황을 다루는 챌린지입니다."
-order: 16
+order: 15
 difficulty: "중급"
 tags: ["텍스트 객체", "리팩터링"]
 practice: true

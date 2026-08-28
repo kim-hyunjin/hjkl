@@ -1,7 +1,7 @@
 ---
 title: "마크로 빠르게 복귀"
 summary: "마크를 활용해 파일의 여러 위치를 오가는 챌린지입니다."
-order: 8
+order: 7
 difficulty: "중급"
 tags: ["마크"]
 practice: true

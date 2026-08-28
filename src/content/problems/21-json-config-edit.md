@@ -1,15 +1,16 @@
 ---
 title: "JSON 설정 값 수정"
 summary: "실무에서 자주 만나는 JSON 설정 파일의 값을 텍스트 객체로 빠르게 바꾸는 챌린지입니다."
-order: 11
+order: 10
 difficulty: "초급"
 tags: ["텍스트 객체", "설정 파일"]
 practice: true
 practiceFile: "problems/problem11.md"
 answer: |
-  /"development"<CR> ci" production<Esc>
+  /development<CR> ci" production<Esc>
   /3000<CR> ciw 8080<Esc>
-  (문자열은 ci"로, 숫자는 ciw로 안쪽 값만 바꿉니다)
+  (문자열은 ci"로, 숫자는 ciw로 안쪽 값만 바꿉니다.
+   ci"는 커서가 따옴표 "안"에 있어야 하므로 따옴표까지 포함해 검색하지 않습니다)
 ---
 
 ## 목표

@@ -1,7 +1,7 @@
 ---
 title: "로그에서 ERROR만 남기기"
 summary: "장애 분석 시 방대한 로그에서 원하는 패턴만 남기고 나머지를 지우는 챌린지입니다."
-order: 19
+order: 17
 difficulty: "고급"
 tags: ["전역 명령", "정규식"]
 practice: true

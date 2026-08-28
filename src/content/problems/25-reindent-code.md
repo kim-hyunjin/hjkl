@@ -1,16 +1,18 @@
 ---
 title: "깨진 들여쓰기 정리"
 summary: "코드 리뷰에서 자주 지적받는 들여쓰기 불일치를 명령 모드로 빠르게 맞추는 챌린지입니다."
-order: 15
+order: 14
 difficulty: "중급"
 tags: ["들여쓰기", "실무"]
 practice: true
 practiceFile: "problems/problem15.md"
 answer: |
   :set shiftwidth=2
-  jj >>              " if 블록 안쪽 줄을 한 단계 들여쓰기
-  j <<               " 닫는 중괄호를 원래 깊이로
-  j <<               " 마지막 return 줄을 한 단계 내어쓰기
+  gg
+  j >>    " if 줄을 한 단계 들여쓰기
+  j <<    " return "positive" 줄을 6칸에서 4칸으로
+  j >>    " 닫는 중괄호를 한 단계 들여쓰기
+  j <<    " 마지막 return 줄을 4칸에서 2칸으로
   (>>/<<로 줄 단위 들여쓰기·내어쓰기를 조정합니다)
 ---
 

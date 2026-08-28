@@ -1,7 +1,7 @@
 ---
 title: "파일 전체 치환"
 summary: "정규식으로 파일 전체에서 일관되게 바꾸는 챌린지입니다."
-order: 5
+order: 4
 difficulty: "중급"
 tags: ["치환", "정규식"]
 practice: true
