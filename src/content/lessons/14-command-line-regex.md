@@ -4,7 +4,7 @@ summary: "명령행(:)에서 파일 전체를 다루는 강력한 정규식 치�
 order: 14
 tags: ["명령행", "정규식"]
 practice: true
-practiceFile: "cmdline.md"
+practiceFile: "lessons/cmdline.md"
 ---
 
 ## 명령행의 세계

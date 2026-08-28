@@ -5,7 +5,7 @@ order: 14
 difficulty: "초급"
 tags: ["검색", "텍스트 객체"]
 practice: true
-practiceFile: "challenge14.md"
+practiceFile: "problems/problem14.md"
 answer: |
   /API_URL<CR> f= l ct$ https://api.example.com<Esc>
   /DEBUG<CR> f= l ciw false<Esc>

@@ -4,7 +4,7 @@ summary: "키 입력을 녹화하고 재생하는 매크로로 반복 작업을 
 order: 11
 tags: ["매크로", "자동화"]
 practice: true
-practiceFile: "macro.md"
+practiceFile: "lessons/macro.md"
 ---
 
 ## 매크로란

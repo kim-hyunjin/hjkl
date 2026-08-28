@@ -5,7 +5,7 @@ order: 12
 difficulty: "중급"
 tags: ["삭제", "실무"]
 practice: true
-practiceFile: "challenge12.md"
+practiceFile: "problems/problem12.md"
 answer: |
   /<<<<<<<<CR> d/=======<CR>   " HEAD 블록(마커 포함) 삭제
   dd                            " ======= 구분선 삭제

@@ -4,7 +4,7 @@ summary: "Insert 모드로 진입하는 다양한 방법을 배웁니다."
 order: 3
 tags: ["편집", "입력"]
 practice: true
-practiceFile: "lesson03.md"
+practiceFile: "lessons/lesson03.md"
 ---
 
 ## Insert 모드 진입

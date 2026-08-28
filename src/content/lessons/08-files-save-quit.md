@@ -4,7 +4,7 @@ summary: "파일을 열고 저장하고 종료하는 모든 방법을 배웁니�
 order: 8
 tags: ["파일", "저장", "종료"]
 practice: true
-practiceFile: "lesson08.md"
+practiceFile: "lessons/lesson08.md"
 ---
 
 ## 저장과 종료 명령

@@ -5,7 +5,7 @@ order: 16
 difficulty: "중급"
 tags: ["텍스트 객체", "리팩터링"]
 practice: true
-practiceFile: "challenge16.md"
+practiceFile: "problems/problem16.md"
 answer: |
   f( l ciw callback<Esc>   " 첫 번째 인자를 callback으로 교체
   f, w ciw delay<Esc>      " 두 번째 인자를 delay로 교체

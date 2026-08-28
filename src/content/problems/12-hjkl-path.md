@@ -5,7 +5,7 @@ order: 2
 difficulty: "입문"
 tags: ["이동"]
 practice: true
-practiceFile: "challenge02.md"
+practiceFile: "problems/problem02.md"
 answer: |
   4l 4j   → 오른쪽 4칸으로 첫 줄을 끝까지 이동한 뒤, 마지막 열을 따라 아래로 4칸 (장애물은 모두 다른 열/행에 있어 지나가지 않음)
 ---

@@ -5,7 +5,7 @@ order: 18
 difficulty: "중급"
 tags: ["비주얼 블록", "실무"]
 practice: true
-practiceFile: "challenge18.md"
+practiceFile: "problems/problem18.md"
 answer: |
   " host 줄에서
   Ctrl-v jj $     " host, port, timeout 세 줄을 각 줄 끝까지 블록 선택(길이가 달라도 $로 처리)

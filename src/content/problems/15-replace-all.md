@@ -5,7 +5,7 @@ order: 5
 difficulty: "중급"
 tags: ["치환", "정규식"]
 practice: true
-practiceFile: "challenge05.md"
+practiceFile: "problems/problem05.md"
 answer: |
   :%s/\<cat\>/dog/g
 ---

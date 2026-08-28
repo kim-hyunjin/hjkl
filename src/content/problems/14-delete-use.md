@@ -5,7 +5,7 @@ order: 4
 difficulty: "초급"
 tags: ["삭제", "텍스트 객체"]
 practice: true
-practiceFile: "challenge04.md"
+practiceFile: "problems/problem04.md"
 answer: |
   (커서를 <span>old</span>의 "old" 위에 두고) dit
 ---

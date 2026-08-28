@@ -5,7 +5,7 @@ order: 15
 difficulty: "중급"
 tags: ["들여쓰기", "실무"]
 practice: true
-practiceFile: "challenge15.md"
+practiceFile: "problems/problem15.md"
 answer: |
   :set shiftwidth=2
   jj >>              " if 블록 안쪽 줄을 한 단계 들여쓰기

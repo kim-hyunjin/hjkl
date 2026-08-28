@@ -4,7 +4,7 @@ summary: "vim을 왜 배우는지, 그리고 첫 화면과 모드 개념을 이�
 order: 1
 tags: ["시작", "모드"]
 practice: true
-practiceFile: "lesson01.md"
+practiceFile: "lessons/lesson01.md"
 ---
 
 ## vim은 왜 배울까?

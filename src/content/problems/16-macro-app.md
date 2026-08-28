@@ -5,7 +5,7 @@ order: 6
 difficulty: "중급"
 tags: ["매크로", "자동화"]
 practice: true
-practiceFile: "challenge06.md"
+practiceFile: "problems/problem06.md"
 answer: |
   gg qa A;<Esc>j q 99@a
   → 마지막 줄에서는 j가 실패해 매크로가 자동으로 멈추므로 99처럼 넉넉한 횟수를 줘도 안전합니다.

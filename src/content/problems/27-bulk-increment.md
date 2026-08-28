@@ -5,7 +5,7 @@ order: 17
 difficulty: "고급"
 tags: ["비주얼 블록", "증가"]
 practice: true
-practiceFile: "challenge17.md"
+practiceFile: "problems/problem17.md"
 answer: |
   " 첫 줄의 "10" 위에서
   Ctrl-v jjj $      " 네 줄의 숫자 컬럼을 비주얼 블록으로 선택(길이가 같으므로 $ 불필요해도 안전)

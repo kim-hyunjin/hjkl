@@ -4,7 +4,7 @@ summary: "여러 파일을 동시에 편집하는 버퍼, 분할창, 탭 개념�
 order: 12
 tags: ["버퍼", "분할창", "탭"]
 practice: true
-practiceFile: "buffer.md"
+practiceFile: "lessons/buffer.md"
 ---
 
 ## 버퍼(Buffer)

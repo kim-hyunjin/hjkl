@@ -5,7 +5,7 @@ order: 3
 difficulty: "초급"
 tags: ["이동", "단어"]
 practice: true
-practiceFile: "challenge03.md"
+practiceFile: "problems/problem03.md"
 answer: |
   6w   → vim(1) makes(2) editing(3) text(4) fast(5) and(6) target(7)이므로 6단어 이동해야 target에 도착
 ---

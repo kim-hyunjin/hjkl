@@ -4,7 +4,7 @@ summary: "텍스트를 선택하고 블록 편집하는 비주얼 모드를 배�
 order: 9
 tags: ["비주얼", "블록"]
 practice: true
-practiceFile: "lesson09.md"
+practiceFile: "lessons/lesson09.md"
 ---
 
 ## 비주얼 모드란

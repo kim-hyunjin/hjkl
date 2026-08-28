@@ -4,7 +4,7 @@ summary: "Normal 모드에서 커서를 빠르게 이동하는 방법을 배웁�
 order: 2
 tags: ["이동"]
 practice: true
-practiceFile: "lesson02.md"
+practiceFile: "lessons/lesson02.md"
 ---
 
 ## 방향키 대신 h j k l

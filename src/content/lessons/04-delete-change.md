@@ -4,7 +4,7 @@ summary: "모션과 결합해 텍스트를 지우고 바꾸는 방법을 배웁�
 order: 4
 tags: ["편집", "삭제"]
 practice: true
-practiceFile: "lesson04.md"
+practiceFile: "lessons/lesson04.md"
 ---
 
 ## 삭제 명령 d

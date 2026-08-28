@@ -38,7 +38,7 @@ const crumbSuffix = `${String(entry.data.order).padStart(2, "0")}번`;
     {
       entry.data.practice && (
         <PracticeTerminal
-          file={entry.data.practiceFile ?? "problem.md"}
+          file={entry.data.practiceFile ?? "problems/problem01.md"}
           title={entry.data.title}
           label="문제 풀기"
         />

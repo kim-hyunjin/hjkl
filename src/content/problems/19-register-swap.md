@@ -5,7 +5,7 @@ order: 9
 difficulty: "고급"
 tags: ["레지스터"]
 practice: true
-practiceFile: "challenge09.md"
+practiceFile: "problems/problem09.md"
 answer: |
   gg "ayy j "bdd "bP
   → a에 "first"를, b에 "second"를 담고(dd로 둘째 줄 삭제),

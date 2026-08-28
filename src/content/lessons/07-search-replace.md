@@ -4,7 +4,7 @@ summary: "파일 안에서 원하는 문자열을 찾고 바꾸는 방법을 배
 order: 7
 tags: ["검색", "치환"]
 practice: true
-practiceFile: "lesson07.md"
+practiceFile: "lessons/lesson07.md"
 ---
 
 ## 검색

@@ -5,7 +5,7 @@ order: 10
 difficulty: "고급"
 tags: ["종합"]
 practice: true
-practiceFile: "challenge10.md"
+practiceFile: "problems/problem10.md"
 answer: |
   :%s/\v^\s*([Tt]odo):\s*/- [ ] /
   :%s/\v^\s*([Dd][Oo][Nn][Ee]):\s*/- [x] /

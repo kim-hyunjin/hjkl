@@ -4,7 +4,7 @@ summary: "위치를 저장하는 마크와 여러 내용을 담는 레지스터�
 order: 13
 tags: ["마크", "레지스터"]
 practice: true
-practiceFile: "marks.md"
+practiceFile: "lessons/marks.md"
 ---
 
 ## 마크(Mark)

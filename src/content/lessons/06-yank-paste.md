@@ -4,7 +4,7 @@ summary: "y, p 명령으로 텍스트를 복사하고 붙여넣는 방법을 배
 order: 6
 tags: ["yank", "paste"]
 practice: true
-practiceFile: "lesson06.md"
+practiceFile: "lessons/lesson06.md"
 ---
 
 ## yank: 복사

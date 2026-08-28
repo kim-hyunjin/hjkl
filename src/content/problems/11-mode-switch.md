@@ -5,7 +5,7 @@ order: 1
 difficulty: "입문"
 tags: ["모드"]
 practice: true
-practiceFile: "challenge01.md"
+practiceFile: "problems/problem01.md"
 answer: |
   $        → 줄 끝으로 이동
   A juice<Esc>   → 입력 모드로 " juice" 입력 후 Normal 모드 복귀
