@@ -9,7 +9,7 @@ export interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { href: '/', label: '홈' },
+  { href: '/', label: '문제풀기' },
   { href: '/learn/', label: '학습하기' },
   { href: '/cheatsheet/', label: '치트시트' },
 ];
