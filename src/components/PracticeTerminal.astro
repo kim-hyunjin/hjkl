@@ -114,8 +114,13 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
     return !!vimState && !vimState.insertMode;
   });
 
+  // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
+  // 레이아웃·폰트까지 전부 여기서 준다. height 100%가 빠지면 에디터가 내용 높이(2~3줄)만큼만
+  // 차지해서, 480px 컨테이너의 나머지가 클릭해도 반응하지 않는 죽은 영역이 된다.
   const theme = EditorView.theme({
-    "&": { fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
+    "&": { height: "100%", fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
+    "&.cm-focused": { outline: "none" },
+    ".cm-scroller": { fontFamily: '"SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
     ".cm-content": { caretColor: "#f0f6fc" },
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#f0f6fc" },
     ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, & ::selection": { backgroundColor: "#264f78 !important" },
@@ -172,20 +177,3 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   document.querySelectorAll("[data-practice-terminal]").forEach((el) => initTerminal(el as HTMLElement));
 </script>
 
-<style>
-  /* CodeMirror 내부 DOM(라이브러리 생성)은 유틸리티로 표현할 수 없어 스코프 CSS로 둠 */
-  .practice-editor .cm-editor {
-    height: 100%;
-    background: #0d1117;
-    color: #c9d1d9;
-  }
-
-  .practice-editor .cm-editor.cm-focused {
-    outline: none;
-  }
-
-  .practice-editor .cm-scroller {
-    font-family: "SFMono-Regular", ui-monospace, Menlo, monospace;
-    line-height: 1.6;
-  }
-</style>
