@@ -49,6 +49,11 @@ const fileName = `${entryId}.txt`;
       ></span>
       <button
         type="button"
+        class="shrink-0 rounded-md border border-border px-4 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-background"
+        data-reset-button
+      >초기화</button>
+      <button
+        type="button"
         class="shrink-0 rounded-md bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
         data-submit-button
       >제출</button>
@@ -148,16 +153,6 @@ const fileName = `${entryId}.txt`;
     return !!vimState && !vimState.insertMode;
   });
 
-  // 문제를 몇 번의 키 입력으로 풀었는지 보여주기 위한 카운터. 실제 keydown만 세므로
-  // vim 명령이 만드는 view.dispatch 기반 프로그램적 변경은 포함되지 않는다.
-  const keystrokeCounter = EditorView.domEventHandlers({
-    keydown: (_event, view) => {
-      const st = terminalStates.get(view);
-      if (st) st.keystrokes += 1;
-      return false;
-    },
-  });
-
   // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
   // 레이아웃·폰트까지 전부 여기서 준다. height 100%가 빠지면 에디터가 내용 높이(2~3줄)만큼만
   // 차지해서, 480px 컨테이너의 나머지가 클릭해도 반응하지 않는 죽은 영역이 된다.
@@ -209,14 +204,28 @@ const fileName = `${entryId}.txt`;
     }
   }
 
+  function resetTerminal(view: EditorView, st: TerminalState) {
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: st.originalContent },
+      selection: { anchor: 0 },
+    });
+    st.savedContent = st.originalContent;
+    st.keystrokes = 0;
+    st.messageEl.textContent = "";
+    delete st.messageEl.dataset.kind;
+    setStatus(st, `로드됨: ${st.fileName}`, "ready");
+    view.focus();
+  }
+
   function initTerminal(root: HTMLElement) {
     const host = root.querySelector<HTMLElement>(".practice-editor");
     const statusEl = root.querySelector<HTMLElement>("[data-practice-status]");
     const messageEl = root.querySelector<HTMLElement>("[data-submit-message]");
     const submitButton = root.querySelector<HTMLButtonElement>("[data-submit-button]");
+    const resetButton = root.querySelector<HTMLButtonElement>("[data-reset-button]");
     const initialContentEl = root.querySelector<HTMLTextAreaElement>("[data-initial-content]");
     const expectedEl = root.querySelector<HTMLTextAreaElement>("[data-expected]");
-    if (!host || !statusEl || !messageEl || !submitButton || !initialContentEl || !expectedEl) return;
+    if (!host || !statusEl || !messageEl || !submitButton || !resetButton || !initialContentEl || !expectedEl) return;
 
     const fileName = root.dataset.filename || "problem.txt";
     const entryId = root.dataset.entryId || "";
@@ -224,7 +233,7 @@ const fileName = `${entryId}.txt`;
 
     const view = new EditorView({
       doc: content,
-      extensions: [vim({ status: true }), blockInputOutsideInsertMode, keystrokeCounter, basicSetup, EditorView.lineWrapping, theme],
+      extensions: [vim({ status: true }), blockInputOutsideInsertMode, basicSetup, EditorView.lineWrapping, theme],
       parent: host,
     });
 
@@ -242,7 +251,14 @@ const fileName = `${entryId}.txt`;
     setStatus(st, `로드됨: ${fileName}`, "ready");
     view.focus();
 
+    // vim()이 Normal/Visual 모드 키를 자체 domEventHandlers에서 가로채 true를 반환하면
+    // CodeMirror는 그 뒤에 등록된 핸들러를 호출하지 않는다(먼저 true를 반환한 핸들러에서
+    // 멈춤). EditorView.domEventHandlers로는 Normal/Visual 모드 키 입력을 놓치므로,
+    // CodeMirror의 핸들러 체인을 완전히 우회하는 capture 단계 리스너로 센다.
+    view.dom.addEventListener("keydown", () => { st.keystrokes += 1; }, { capture: true });
+
     submitButton.addEventListener("click", () => checkAnswer(view, st));
+    resetButton.addEventListener("click", () => resetTerminal(view, st));
   }
 
   document.querySelectorAll("[data-problem-terminal]").forEach((el) => initTerminal(el as HTMLElement));
