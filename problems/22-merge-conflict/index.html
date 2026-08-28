@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="ko" class="scroll-smooth"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.2.7"><meta name="description" content="머지 충돌 마커를 지우고 원하는 쪽 코드만 남기는, 실무에서 매일 만나는 챌린지입니다."><link rel="icon" type="image/svg+xml" href="/hjkl/favicon.svg"><link rel="icon" href="/hjkl/favicon.ico"><title>git 충돌 마커 정리 | hjkl</title><script data-starwind-theme-init>(() => {
+  const storageKey = "colorTheme";
+  const className = "dark";
+  const defaultTheme = "system";
+  const themeQuery = "(prefers-color-scheme: dark)";
+  const applyTheme = () => {
+    let theme = defaultTheme;
+
+    try {
+      const storedTheme = window.localStorage.getItem(storageKey);
+      if (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system") {
+        theme = storedTheme;
+      } else {
+        window.localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+    }
+
+    const resolvedTheme =
+      theme === "system"
+        ? typeof window.matchMedia === "function" && window.matchMedia(themeQuery).matches
+          ? "dark"
+          : "light"
+        : theme;
+
+    document.documentElement.classList.toggle(className, resolvedTheme === "dark");
+  };
+
+  applyTheme();
+  window.__starwindApplyInitialTheme = applyTheme;
+
+  if (!window.__starwindHasThemeInitSwapListener) {
+    window.__starwindHasThemeInitSwapListener = true;
+    document.addEventListener("astro:after-swap", () => {
+      window.__starwindApplyInitialTheme?.();
+    });
+  }
+})();</script><link rel="stylesheet" href="/hjkl/_astro/BaseLayout.ChTvqnC9.css"><style>.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq]{color:#c9d1d9;background:#0d1117;height:100%}.practice-editor[data-astro-cid-znkh6qlq] .cm-editor[data-astro-cid-znkh6qlq].cm-focused{outline:none}.practice-editor[data-astro-cid-znkh6qlq] .cm-scroller[data-astro-cid-znkh6qlq]{font-family:SFMono-Regular,ui-monospace,Menlo,monospace;line-height:1.6}
+</style></head> <body class="min-h-screen font-sans text-base leading-[1.6]"> <a class="absolute top-[-100%] left-4 z-100 rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground focus:top-2" href="#main">본문으로 건너뛰기</a> <header class="sticky top-0 z-50 border-b border-border bg-background/88 backdrop-blur"> <div class="mx-auto w-full max-w-[1080px] px-5"> <nav class="flex flex-wrap items-center gap-4 py-[0.65rem]" aria-label="주요 메뉴"> <a href="/hjkl/" class="flex items-center gap-2 text-[1.15rem] font-bold text-foreground hover:no-underline" aria-label="hjkl 홈"> <span class="rounded-lg border border-primary bg-primary/12 px-[0.45rem] py-[0.1rem] font-mono text-[0.95rem] text-primary">hjkl</span> <span>Vim 학습</span> </a> <div class="flex flex-wrap items-center gap-1 max-[760px]:order-3 max-[760px]:w-full"> <a href="/hjkl/" class="rounded-lg px-[0.7rem] py-[0.35rem] text-[0.92rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground hover:no-underline"> 홈 </a><a href="/hjkl/learn/" class="rounded-lg px-[0.7rem] py-[0.35rem] text-[0.92rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground hover:no-underline"> 학습하기 </a><a href="/hjkl/cheatsheet/" class="rounded-lg px-[0.7rem] py-[0.35rem] text-[0.92rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground hover:no-underline"> 치트시트 </a> </div> <div class="ml-auto flex items-center gap-2"> <button class="group inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=on]:text-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-outline focus-visible:ring-outline/50 focus-visible:ring-3 transition-colors outline-none aria-invalid:ring-error/40 aria-invalid:border-error hover:border-muted-foreground data-[state=on]:bg-transparent border-input hover:bg-muted hover:text-foreground border bg-transparent shadow-xs h-11 min-w-11 px-2.5 text-base" type="button" aria-label="테마 전환" aria-pressed="false" data-state="off" data-sw-toggle data-sw-theme-toggle data-sw-theme-control data-theme-on="dark" data-theme-off="light" data-sync-group="starwind-theme" data-unpressed data-slot="theme-toggle">  <span class="size-5" data-theme-icon-wrapper>  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=off]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+</svg>   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-5 group-data-[state=on]:data-ready:block" aria-hidden="true" data-theme-icon="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+</svg>  </span>  </button> <script type="module" src="/hjkl/_astro/ThemeToggle.astro_astro_type_script_index_0_lang.PA6ItEFl.js"></script> </div> </nav> </div> </header> <main id="main" class="pb-16">  <article class="mx-auto w-full max-w-[1080px] px-5"> <div class="mb-8 flex flex-col gap-[0.6rem] border-b border-border pt-8 pb-6" data-entry-id="22-merge-conflict"> <div class="text-[0.85rem] text-muted-foreground">12번</div> <div class="flex gap-2"> <div data-sw-badge="true" class="inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 focus-visible:border-outline focus-visible:ring-outline/50 border px-3 py-0.5 text-sm [&amp;_svg:not([class*='size-'])]:size-4 border-primary text-primary" data-slot="badge"> 중급 </div> </div> <h1 class="m-0 text-[clamp(1.6rem,3vw,2.25rem)] leading-[1.25]">git 충돌 마커 정리</h1> <p class="m-0 max-w-[60ch] text-[1.05rem] text-muted-foreground">머지 충돌 마커를 지우고 원하는 쪽 코드만 남기는, 실무에서 매일 만나는 챌린지입니다.</p> </div> <script type="module" src="/hjkl/_astro/DetailHeader.astro_astro_type_script_index_0_lang.JahT854j.js"></script> <div class="prose leading-[1.7] prose-headings:text-foreground prose-h2:mt-[2.2rem] prose-h2:mb-4 prose-h2:border-b-2 prose-h2:border-border prose-h2:pb-[0.4rem] prose-h2:text-2xl prose-h2:font-bold prose-h2:first:mt-0 prose-a:text-primary prose-code:font-mono prose-code:font-normal prose-code:rounded prose-code:border prose-code:border-border prose-code:bg-muted prose-code:px-[0.35em] prose-code:py-[0.1em] prose-code:text-[0.88em] prose-code:text-primary prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:mb-[1.2em] prose-pre:rounded-lg prose-pre:border prose-pre:border-border prose-pre:bg-black prose-pre:p-4 prose-pre:text-[0.88rem] prose-pre:leading-[1.55] prose-pre:text-[#d1e7dd] prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-primary/8 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-li:marker:text-primary prose-li:marker:font-semibold prose-table:border-collapse prose-table:text-[0.92rem] prose-th:border prose-th:border-border prose-th:bg-muted prose-td:border prose-td:border-border max-w-[72ch]!"> <h2 id="목표">목표</h2>
+<p>다음은 머지 충돌이 발생한 파일입니다.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>function greet(name) {</span></span>
+<span class="line"><span>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span></span>
+<span class="line"><span>  console.log("Hi " + name);</span></span>
+<span class="line"><span>=======</span></span>
+<span class="line"><span>  console.log("Hello, " + name + "!");</span></span>
+<span class="line"><span>&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/greeting</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p><code>feature/greeting</code> 쪽 코드만 남기고 충돌 마커(<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>)와 <code>HEAD</code> 쪽 코드를 모두 삭제하세요.</p>
+<p>결과:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>function greet(name) {</span></span>
+<span class="line"><span>  console.log("Hello, " + name + "!");</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<h2 id="조건">조건</h2>
+<ul>
+<li>검색(<code>/</code>)으로 마커 줄을 찾아 이동</li>
+<li><code>dd</code> 또는 범위 삭제(<code>d/패턴&lt;CR&gt;</code>)로 불필요한 줄 제거</li>
+<li>남기려는 코드 줄은 수정하지 않기</li>
+</ul>
+ </div> <section class="mt-8" aria-label=" git 충돌 마커 정리 문제 풀기" data-astro-cid-znkh6qlq> <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1" data-astro-cid-znkh6qlq> <h2 class="text-lg font-bold" data-astro-cid-znkh6qlq>문제 풀기</h2> <p class="text-sm text-muted-foreground" data-astro-cid-znkh6qlq>
+에디터를 클릭한 뒤 키보드로 조작하세요. <code class="font-mono" data-astro-cid-znkh6qlq>i</code> 입력, <code class="font-mono" data-astro-cid-znkh6qlq>Esc</code> Normal,
+<code class="font-mono" data-astro-cid-znkh6qlq>:w</code> 저장(다운로드), <code class="font-mono" data-astro-cid-znkh6qlq>:q!</code> 강제 종료.
+</p> </div> <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" data-practice-terminal data-file="problems/problem12.md" data-title="git 충돌 마커 정리" data-astro-cid-znkh6qlq> <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="size-[11px] rounded-full bg-[#f85149]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#d29922]" data-astro-cid-znkh6qlq></span> <span class="size-[11px] rounded-full bg-[#3fb950]" data-astro-cid-znkh6qlq></span> <span class="ml-1" data-astro-cid-znkh6qlq>problems/problem12.md</span> </div> <div class="relative h-[480px] overflow-hidden max-[760px]:h-80" data-astro-cid-znkh6qlq> <div class="practice-editor h-full" data-astro-cid-znkh6qlq></div> </div> <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground" data-astro-cid-znkh6qlq> <span class="truncate" data-astro-cid-znkh6qlq>problems/problem12.md</span> <span class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error" data-practice-status data-astro-cid-znkh6qlq>초기화 중</span> </div> </div> </section> <script type="module" src="/hjkl/_astro/PracticeTerminal.astro_astro_type_script_index_0_lang.DW015VDE.js"></script> <div data-sw-collapsible data-state="closed" class="bg-muted border border-border rounded-lg p-4 my-3" data-slot="collapsible">   <button type="button" data-sw-collapsible-trigger aria-expanded="false" data-state="closed" class="group flex w-full items-center justify-between gap-2 cursor-pointer font-semibold text-muted-foreground text-left data-[state=open]:text-foreground data-[state=open]:mb-2" data-slot="collapsible-trigger">  정답 확인 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0 transition-transform group-data-[state=open]:rotate-180" aria-hidden="true">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M6 9l6 6l6 -6" />
+</svg>  </button> <div data-sw-collapsible-panel data-state="closed" hidden class="pt-1" data-slot="collapsible-panel">   <pre>/&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;CR&gt; d/=======&lt;CR&gt;   &quot; HEAD 블록(마커 포함) 삭제
+dd                            &quot; ======= 구분선 삭제
+/^&gt;&gt;&gt;&gt;&gt;&gt;&gt;&lt;CR&gt; dd              &quot; 하단 마커 줄 삭제
+(결과적으로 feature/greeting 쪽 코드 한 줄만 남습니다)
+</pre>   </div>   </div> <script type="module" src="/hjkl/_astro/CollapsibleRoot.astro_astro_type_script_index_0_lang.DpelRlY_.js"></script> <nav class="mt-12 flex justify-between gap-4 border-t border-border pt-4"> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/problems/21-json-config-edit/" data-slot="button"> ← JSON 설정 값 수정 </a> <a class="inline-flex items-center justify-center gap-1.5 rounded-md font-medium whitespace-nowrap [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 transition-all outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 hover:bg-muted hover:text-foreground focus-visible:ring-outline/50 h-11 px-5 text-base has-[>svg]:px-4 [&amp;_svg:not([class*='size-'])]:size-4.5" href="/hjkl/problems/23-remove-console-log/" data-pager-next="true" data-slot="button"> 디버그용 console.log 일괄 제거 → </a> </nav> </article>  </main> <footer class="border-t border-border bg-muted py-8 text-[0.9rem] text-muted-foreground"> <div class="mx-auto flex w-full max-w-[1080px] flex-wrap items-center justify-between gap-4 px-5"> <span>hjkl — Vim 학습 사이트</span> <span>학습하기 · 문제풀이</span> </div> </footer> </body> </html>
