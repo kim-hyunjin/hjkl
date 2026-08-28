@@ -1,7 +1,7 @@
 ---
 title: "비주얼 블록으로 동시 편집"
 summary: "여러 줄의 같은 위치를 블록 편집으로 한 번에 바꾸는 챌린지입니다."
-order: 7
+order: 6
 difficulty: "중급"
 tags: ["비주얼 블록"]
 practice: true

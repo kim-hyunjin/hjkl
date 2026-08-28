@@ -1,7 +1,7 @@
 ---
 title: "디버그용 console.log 일괄 제거"
 summary: "커밋 전에 잊고 남긴 console.log를 명령어 한 줄로 모두 지우는 챌린지입니다."
-order: 13
+order: 12
 difficulty: "중급"
 tags: ["전역 명령", "실무"]
 practice: true

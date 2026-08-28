@@ -26,10 +26,10 @@ const currentPath = current.split("?")[0];
           NAV_ITEMS.map((item) => (
             <a
               href={item.href}
-              aria-current={currentPath === item.href ? "page" : undefined}
+              aria-current={currentPath === item.path ? "page" : undefined}
               class:list={[
                 "rounded-lg px-[0.7rem] py-[0.35rem] text-[0.92rem] font-medium text-muted-foreground hover:bg-muted hover:text-foreground hover:no-underline",
-                { "bg-primary/12 text-primary hover:bg-primary/12 hover:text-primary": currentPath === item.href },
+                { "bg-primary/12 text-primary hover:bg-primary/12 hover:text-primary": currentPath === item.path },
               ]}
             >
               {item.label}

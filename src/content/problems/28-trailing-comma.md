@@ -1,7 +1,7 @@
 ---
 title: "객체 속성에 콤마 일괄 추가"
 summary: "린터가 요구하는 트레일링 콤마를 비주얼 블록으로 한 번에 붙이는 챌린지입니다."
-order: 18
+order: 16
 difficulty: "중급"
 tags: ["비주얼 블록", "실무"]
 practice: true

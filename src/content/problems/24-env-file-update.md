@@ -1,15 +1,15 @@
 ---
 title: ".env 파일 값 교체"
 summary: "배포 환경에 맞춰 .env 파일의 값만 정확히 바꾸는 챌린지입니다."
-order: 14
+order: 13
 difficulty: "초급"
 tags: ["검색", "텍스트 객체"]
 practice: true
 practiceFile: "problems/problem14.md"
 answer: |
-  /API_URL<CR> f= l ct$ https://api.example.com<Esc>
+  /API_URL<CR> f= l c$ https://api.example.com<Esc>
   /DEBUG<CR> f= l ciw false<Esc>
-  (등호 뒤 값만 지우고 새 값을 입력, 키 이름은 건드리지 않습니다)
+  (c$로 등호 뒤부터 줄 끝까지만 바꾸고, 키 이름은 건드리지 않습니다)
 ---
 
 ## 목표

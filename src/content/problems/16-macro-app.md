@@ -1,14 +1,14 @@
 ---
 title: "매크로로 줄 끝에 세미콜론 붙이기"
 summary: "매크로를 기록·재생해 여러 줄을 일괄 수정하는 챌린지입니다."
-order: 6
+order: 5
 difficulty: "중급"
 tags: ["매크로", "자동화"]
 practice: true
 practiceFile: "problems/problem06.md"
 answer: |
-  gg qa A;<Esc>j q 99@a
-  → 마지막 줄에서는 j가 실패해 매크로가 자동으로 멈추므로 99처럼 넉넉한 횟수를 줘도 안전합니다.
+  gg qa A;<Esc>j q 3@a
+  → 첫 줄은 기록하면서 처리되므로, 남은 세 줄만큼 3@a로 재생합니다.
 ---
 
 ## 목표

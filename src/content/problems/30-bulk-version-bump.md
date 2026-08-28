@@ -1,7 +1,7 @@
 ---
 title: "package.json 버전 일괄 업데이트"
 summary: "메이저 업그레이드 시 관련 패키지들의 버전 문자열을 한 번에 바꾸는 챌린지입니다."
-order: 20
+order: 18
 difficulty: "고급"
 tags: ["치환", "정규식"]
 practice: true

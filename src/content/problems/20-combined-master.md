@@ -1,7 +1,7 @@
 ---
 title: "종합 마스터 — 문서 정비"
 summary: "이동·치환·비주얼·매크로를 모두 활용해 문서를 정리하는 종합 챌린지입니다."
-order: 10
+order: 9
 difficulty: "고급"
 tags: ["종합"]
 practice: true
@@ -44,5 +44,5 @@ done: clean desk
 ## 조건
 
 - 비주얼 블록, 치환, `dd`/`p` 모두 사용
-- `\c`(대소문자 무시) 사용 가능
+- 대소문자가 섞인 `done`/`DONE`은 `[Dd][Oo][Nn][Ee]` 같은 문자 클래스로 처리
 - 매크로는 선택 사항

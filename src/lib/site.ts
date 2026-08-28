@@ -4,12 +4,15 @@ export type LessonEntry = CollectionEntry<'lessons'>;
 export type ProblemEntry = CollectionEntry<'problems'>;
 
 export interface NavItem {
+  /** App-absolute path, e.g. "/learn/". Compared against the page's `current`. */
+  path: string;
+  /** Base-aware href for the anchor, e.g. "/hjkl/learn/". */
   href: string;
   label: string;
 }
 
-const NAV: NavItem[] = [
-  { href: '/', label: '홈' },
+const NAV: Omit<NavItem, 'path'>[] = [
+  { href: '/', label: '문제풀기' },
   { href: '/learn/', label: '학습하기' },
   { href: '/cheatsheet/', label: '치트시트' },
 ];
@@ -25,7 +28,7 @@ export function link(path: string): string {
   return `${base}${clean}`;
 }
 
-export const NAV_ITEMS: NavItem[] = NAV.map((item) => ({ ...item, href: link(item.href) }));
+export const NAV_ITEMS: NavItem[] = NAV.map((item) => ({ ...item, path: item.href, href: link(item.href) }));
 
 /**
  * Markdown 콘텐츠(`<Content />`)는 태그에 직접 class를 줄 수 없으므로

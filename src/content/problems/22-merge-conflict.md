@@ -1,15 +1,15 @@
 ---
 title: "git 충돌 마커 정리"
 summary: "머지 충돌 마커를 지우고 원하는 쪽 코드만 남기는, 실무에서 매일 만나는 챌린지입니다."
-order: 12
+order: 11
 difficulty: "중급"
 tags: ["삭제", "실무"]
 practice: true
 practiceFile: "problems/problem12.md"
 answer: |
-  /<<<<<<<<CR> d/=======<CR>   " HEAD 블록(마커 포함) 삭제
-  dd                            " ======= 구분선 삭제
-  /^>>>>>>><CR> dd              " 하단 마커 줄 삭제
+  /<<<<<<<<CR>     " 상단 마커로 이동
+  dd dd dd          " <<<<<<< HEAD, HEAD 쪽 코드, ======= 세 줄 삭제
+  /^>>>>>>><CR> dd  " 하단 마커 줄 삭제
   (결과적으로 feature/greeting 쪽 코드 한 줄만 남습니다)
 ---
 
