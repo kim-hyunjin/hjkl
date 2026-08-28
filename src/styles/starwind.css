@@ -189,3 +189,17 @@
   padding: 0;
   color: inherit;
 }
+
+/*
+ * @tailwindcss/typography assumes a borderless table, so it zeroes the outer
+ * padding of the edge cells (`thead th:first-child`, `tbody td:last-child`, …)
+ * and gives `thead th` no top padding. Our prose tables are bordered with a
+ * filled header (see PROSE_CLASS), which left that text touching the border.
+ * Typography's rules sit at `.prose :where(…)` specificity, which the
+ * `prose-th:*`/`prose-td:*` utilities only tie with, so spell the padding out
+ * here — the descendant element selector wins the tiebreak.
+ */
+.prose :is(th, td) {
+  padding-block: 0.6em;
+  padding-inline: 0.9em;
+}
