@@ -255,7 +255,16 @@ const fileName = `${entryId}.txt`;
     // CodeMirror는 그 뒤에 등록된 핸들러를 호출하지 않는다(먼저 true를 반환한 핸들러에서
     // 멈춤). EditorView.domEventHandlers로는 Normal/Visual 모드 키 입력을 놓치므로,
     // CodeMirror의 핸들러 체인을 완전히 우회하는 capture 단계 리스너로 센다.
-    view.dom.addEventListener("keydown", () => { st.keystrokes += 1; }, { capture: true });
+    view.dom.addEventListener(
+      "keydown",
+      (e: KeyboardEvent) => {
+        // Shift/Ctrl 등 조합키 자체의 keydown은 세지 않는다.
+        // 예: Shift+4($)는 Shift keydown(무시) + $ keydown(1회 카운트)로 이어져 결과적으로 1회로 집계된다.
+        if (["Shift", "Control", "Alt", "Meta"].includes(e.key)) return;
+        st.keystrokes += 1;
+      },
+      { capture: true },
+    );
 
     submitButton.addEventListener("click", () => checkAnswer(view, st));
     resetButton.addEventListener("click", () => resetTerminal(view, st));
