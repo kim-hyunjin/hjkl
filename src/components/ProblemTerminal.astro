@@ -198,10 +198,19 @@ const fileName = `${entryId}.txt`;
   // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
   Vim.setOption("pcre", false);
 
-  // vim이 아직 붙지 않았으면(초기화 전) 아무것도 막지 않는다.
+  // 입력을 막아야 하는 상태인지 — 즉 "insert 모드가 아닌지" 판단한다.
+  //
+  // vim이 아예 붙어 있지 않을 때(false)도 막는 쪽으로 둔다. CodeMirror는 ViewPlugin 생성이
+  // 실패하면 콘솔에 "CodeMirror plugin crashed"만 남기고 그 플러그인을 떼어낸 채 계속
+  // 동작한다(PluginInstance.update의 try/catch). 그러면 vim 키맵이 사라져 hjkl 같은 키가
+  // 아무에게도 처리되지 않고, 예전처럼 여기서 false를 돌려주면 세 겹의 가드가 전부 풀려
+  // 에디터가 그냥 평범한 편집 상자가 된다 — 노말 모드인 줄 알고 누른 hjkl이 그대로 버퍼에
+  // 찍히는 상태다. vim 연습용 에디터에서 vim 없이 자유롭게 타이핑되는 게 맞는 경우는 없으니
+  // 그 때는 막는 편이 안전하다(초기화 직전의 짧은 구간에도 해가 없다).
+  // 실제로 vim이 붙지 못했다면 아래 assertVimAttached가 상태줄로 알려준다.
   function outsideInsertMode(view: EditorView) {
     const vimState = getCM(view)?.state?.vim;
-    return !!vimState && !vimState.insertMode;
+    return !vimState || !vimState.insertMode;
   }
 
   // Normal/Visual 모드에서 DOM으로 직접 들어오는 입력을 무시한다.
@@ -267,6 +276,15 @@ const fileName = `${entryId}.txt`;
   // 위 속성은 CodeMirror가 뷰를 갱신할 때 다시 계산된다. 모드 전환 직후 바로 반영되도록
   // 빈 트랜잭션을 흘려보낸다. vim-mode-change는 cm.operation() 안에서 발생하므로 진행 중인
   // 업데이트에 끼어들지 않게 마이크로태스크로 미룬다(사람이 그 사이에 키를 누를 수는 없다).
+  // vim이 붙지 못했는지 확인한다. 붙지 못하면 키맵이 없어 vim 명령이 하나도 듣지 않는데,
+  // CodeMirror는 콘솔 경고만 남기고 조용히 계속 동작하므로 사용자는 "왜 안 되지"만 겪는다.
+  // 조용히 망가지는 대신 상태줄로 드러낸다.
+  function assertVimAttached(view: EditorView, fail: (message: string) => void) {
+    if (getCM(view)?.state?.vim) return true;
+    fail("vim 확장을 불러오지 못했습니다. 페이지를 새로고침해 주세요.");
+    return false;
+  }
+
   function syncEditableWithVimMode(view: EditorView) {
     const cm = getCM(view);
     if (!cm) return;
@@ -386,6 +404,7 @@ const fileName = `${entryId}.txt`;
       messageEl,
     };
     terminalStates.set(view, st);
+    if (!assertVimAttached(view, (message) => setStatus(st, message, "error"))) return;
     setStatus(st, `로드됨: ${fileName}`, "ready");
     view.focus();
 
