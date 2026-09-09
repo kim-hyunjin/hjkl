@@ -1,0 +1,4 @@
+import{i as e,n as t,r as n,t as r}from"./vim-editor.BFejtaWZ.js";var i=`/hjkl/`;async function a(t,n,r){e(t,`파일 로드 중…`,`loading`),t.fileName=r;let a=`// hjkl 실습 파일
+// vim으로 편집해보세요.
+
+`;try{let e=await fetch(`${i}practice/${r}`);e.ok&&(a=await e.text())}catch{}n.dispatch({changes:{from:0,to:n.state.doc.length,insert:a},selection:{anchor:0}}),t.originalContent=a,t.savedContent=a,e(t,`로드됨: ${r}`,`ready`),n.focus()}async function o(i){let o=i.querySelector(`.practice-editor`),s=i.querySelector(`[data-practice-status]`);if(!o||!s)return;let c=i.dataset.file||`lesson01.md`,l=t(o,``),u=n(l,{fileName:c,originalContent:``,savedContent:``,statusEl:s,mimeType:`text/markdown;charset=utf-8`});r(l,t=>e(u,t,`error`))&&await a(u,l,c)}document.querySelectorAll(`[data-practice-terminal]`).forEach(e=>o(e));
