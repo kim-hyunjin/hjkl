@@ -240,6 +240,47 @@ const fileName = `${entryId}.txt`;
     return true;
   });
 
+  // 3단계(가장 확실한 방어선): Normal/Visual 모드에서는 편집 영역의 contenteditable을 꺼 둔다.
+  //
+  // 1·2단계만으로 부족한 이유: vim 키맵은 "자기가 처리한" 키의 keydown에만
+  // preventDefault를 건다(라이브러리 handleKey는 result가 참일 때만 막는다). 그래서 vim이
+  // 처리하지 못한 키는 keydown이 막히지 않은 채 브라우저의 기본 문자 삽입 경로로 흘러간다.
+  // 단일 키는 대부분 vim이 가져가지만, `@7`·`Vp`처럼 두 번째 키에서 처리에 실패하는 조합이
+  // 실제로 존재한다(vim을 배우는 중이라면 이런 어중간한 조합을 수시로 누르게 된다).
+  // 그 뒤를 beforeinput 취소에만 의존하는 건 위태롭다 — 취소 가능 여부와 취소가 실제로
+  // 먹히는지는 브라우저·입력기마다 다르고, IME 조합이 만드는 insertCompositionText는
+  // 애초에 취소할 수 없는 이벤트다.
+  //
+  // contenteditable이 꺼져 있으면 브라우저가 이 영역을 편집 대상으로 보지 않으므로 기본
+  // 삽입 경로도, IME 조합 자체도 시작되지 않는다. 즉 막아야 할 입력이 만들어지지 않는다.
+  // vim 명령이 만드는 편집은 view.dispatch로 들어오므로 영향을 받지 않는다.
+  //
+  // EditorView.editable 대신 contentAttributes로 속성만 덮어쓰는 이유: editable 파셋을
+  // 끄면 CodeMirror가 선택 영역 그리기·포커스 처리·마우스 선택까지 다르게 동작한다.
+  // 여기서 닫고 싶은 건 브라우저의 편집 경로 하나뿐이라 DOM 속성만 바꾼다.
+  // contenteditable이 아닌 요소는 기본적으로 포커스를 받지 못하므로 tabindex를 함께 준다.
+  const editableOnlyInInsertMode = EditorView.contentAttributes.of((view) => ({
+    contenteditable: outsideInsertMode(view) ? "false" : "true",
+    tabindex: "0",
+  }));
+
+  // 위 속성은 CodeMirror가 뷰를 갱신할 때 다시 계산된다. 모드 전환 직후 바로 반영되도록
+  // 빈 트랜잭션을 흘려보낸다. vim-mode-change는 cm.operation() 안에서 발생하므로 진행 중인
+  // 업데이트에 끼어들지 않게 마이크로태스크로 미룬다(사람이 그 사이에 키를 누를 수는 없다).
+  function syncEditableWithVimMode(view: EditorView) {
+    const cm = getCM(view);
+    if (!cm) return;
+    cm.on("vim-mode-change", () => {
+      Promise.resolve().then(() => {
+        if (!view.dom.isConnected) return;
+        const hadFocus = view.hasFocus;
+        view.dispatch({});
+        // contenteditable이 꺼지는 순간 포커스를 놓는 브라우저가 있어 되돌려준다.
+        if (hadFocus && !view.hasFocus) view.focus();
+      });
+    });
+  }
+
   // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
   // 레이아웃·폰트까지 전부 여기서 준다. height 100%가 빠지면 에디터가 내용 높이(2~3줄)만큼만
   // 차지해서, 480px 컨테이너의 나머지가 클릭해도 반응하지 않는 죽은 영역이 된다.
@@ -322,6 +363,7 @@ const fileName = `${entryId}.txt`;
       doc: content,
       extensions: [
         vim({ status: true }),
+        editableOnlyInInsertMode,
         blockBeforeInputOutsideInsertMode,
         blockInputOutsideInsertMode,
         basicSetup,
@@ -330,6 +372,8 @@ const fileName = `${entryId}.txt`;
       ],
       parent: host,
     });
+
+    syncEditableWithVimMode(view);
 
     const st: TerminalState = {
       fileName,
