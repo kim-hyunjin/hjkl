@@ -134,6 +134,66 @@ const fileName = `${entryId}.txt`;
 
   Vim.mapCommand("ZZ", "keyToEx", "", undefined, { exArgs: { input: "wq" } });
 
+  // 시스템 클립보드 레지스터(`"+`)의 붙여넣기를 고친다.
+  //
+  // 라이브러리(vim-core의 actions.paste)는 `"+p`에서 navigator.clipboard.readText()를
+  // 그대로 호출하고 결과를 기다리기만 한다. 그런데 브라우저에서 이 API는
+  //  - Chrome: 읽기 권한이 필요하고, 권한 프롬프트에 응답이 없으면 promise가 영영
+  //    pending으로 남는다 → `"+p`가 아무 일도 일어나지 않은 채 끝난다
+  //  - Firefox/Safari: 웹 페이지에 readText가 아예 없다 → 호출 자체가 실패한다
+  // 어느 쪽이든 실패가 사용자에게 전혀 보이지 않는다. 그래서 기다림에 시간 제한을 두고,
+  // 못 읽으면 에디터가 들고 있는 `+` 레지스터 사본으로 붙여넣은 뒤 상태줄로 알린다.
+  //
+  // 복사(`"+y`)는 원래 동작한다. 라이브러리가 레지스터와 OS 클립보드에 함께 쓰고,
+  // writeText는 키 입력의 user activation 덕에 권한 없이도 성공한다. 그래서 이 사이트
+  // 안에서의 `"+y` → `"+p`는 클립보드 권한이 없어도 항상 제대로 동작하게 된다.
+  const CLIPBOARD_READ_TIMEOUT_MS = 500;
+
+  function readSystemClipboard(): Promise<string | null> {
+    const clipboard = navigator.clipboard;
+    if (!clipboard?.readText) return Promise.resolve(null);
+    let pending: Promise<string>;
+    try {
+      pending = clipboard.readText();
+    } catch {
+      return Promise.resolve(null);
+    }
+    return Promise.race([
+      pending.catch(() => null),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), CLIPBOARD_READ_TIMEOUT_MS)),
+    ]);
+  }
+
+  // this는 라이브러리의 actions 객체다(actions[command.action](...)로 호출된다).
+  // 붙여넣기 본체인 continuePaste는 거기 들어 있어서 그대로 위임한다.
+  Vim.defineAction("paste", function (this: any, cm, actionArgs, vim) {
+    const actions = this;
+    const register = Vim.getRegisterController().getRegister(actionArgs.registerName);
+
+    if (actionArgs.registerName !== "+") {
+      actions.continuePaste(cm, actionArgs, vim, register.toString(), register);
+      return;
+    }
+
+    readSystemClipboard().then((clipboardText) => {
+      if (clipboardText) {
+        actions.continuePaste(cm, actionArgs, vim, clipboardText, register);
+        return;
+      }
+      const ownCopy = register.toString();
+      const st = stateOf(cm as unknown as CodeMirror);
+      if (st) {
+        setStatus(
+          st,
+          ownCopy
+            ? '시스템 클립보드를 읽을 수 없어 에디터 안의 "+ 레지스터를 붙여넣었습니다'
+            : '시스템 클립보드를 읽을 수 없습니다 ("+y로 먼저 복사해보세요)',
+        );
+      }
+      if (ownCopy) actions.continuePaste(cm, actionArgs, vim, ownCopy, register);
+    });
+  });
+
   // 라이브러리 기본값은 pcre(JavaScript 정규식)라 강의에서 가르치는 vim 정규식
   // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
   Vim.setOption("pcre", false);
