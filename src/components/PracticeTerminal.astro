@@ -167,105 +167,34 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
   Vim.setOption("pcre", false);
 
-  // 입력을 막아야 하는 상태인지 — 즉 "insert 모드가 아닌지" 판단한다.
+  // Normal/Visual 모드에서는 편집 영역의 contenteditable을 꺼 둔다.
   //
-  // vim이 아예 붙어 있지 않을 때(false)도 막는 쪽으로 둔다. CodeMirror는 ViewPlugin 생성이
-  // 실패하면 콘솔에 "CodeMirror plugin crashed"만 남기고 그 플러그인을 떼어낸 채 계속
-  // 동작한다(PluginInstance.update의 try/catch). 그러면 vim 키맵이 사라져 hjkl 같은 키가
-  // 아무에게도 처리되지 않고, 예전처럼 여기서 false를 돌려주면 세 겹의 가드가 전부 풀려
-  // 에디터가 그냥 평범한 편집 상자가 된다 — 노말 모드인 줄 알고 누른 hjkl이 그대로 버퍼에
-  // 찍히는 상태다. vim 연습용 에디터에서 vim 없이 자유롭게 타이핑되는 게 맞는 경우는 없으니
-  // 그 때는 막는 편이 안전하다(초기화 직전의 짧은 구간에도 해가 없다).
-  // 실제로 vim이 붙지 못했다면 아래 assertVimAttached가 상태줄로 알려준다.
-  function outsideInsertMode(view: EditorView) {
-    const vimState = getCM(view)?.state?.vim;
-    return !vimState || !vimState.insertMode;
-  }
-
-  // Normal/Visual 모드에서 DOM으로 직접 들어오는 입력을 무시한다.
-  // 키 이벤트는 vim 키맵이 가로채지만 일부 DOM 입력은 keydown 없이 도착해 vim
-  // 키맵을 지나치므로, Normal 모드인데도 글자가 삽입될 수 있다. vim 명령이 만드는
-  // 편집은 view.dispatch로 들어와 이 핸들러들을 타지 않는다.
+  // vim 키맵은 자기가 처리한 키의 keydown에만 preventDefault를 건다(라이브러리 handleKey는
+  // result가 참일 때만 막는다). 그래서 vim이 처리하지 못한 키는 keydown이 막히지 않은 채
+  // 브라우저의 기본 문자 삽입 경로로 흘러간다 — 단일 키는 대부분 vim이 가져가지만
+  // `@7`, `Vp`처럼 두 번째 키에서 처리에 실패하는 조합이 실제로 있다.
   //
-  // 1단계: 브라우저가 편집 영역을 고치기 전에 beforeinput을 취소한다. inputHandler는
-  // 브라우저가 이미 글자를 넣은 뒤에 불리므로, 그것만으로는 글자가 한 번 화면에 그려지는
-  // 것 자체를 막을 수 없다. 여기서 취소하면 애초에 DOM에 들어오지 않는다.
-  const blockBeforeInputOutsideInsertMode = EditorView.domEventHandlers({
-    // 취소할 수 없는 이벤트(IME 조합 중에 오는 insertCompositionText)까지 true를 반환하면
-    // CodeMirror의 beforeinput 처리만 건너뛸 뿐 입력은 그대로 들어온다. 그건 2단계가 맡는다.
-    beforeinput: (event, view) => event.cancelable && outsideInsertMode(view),
-  });
-
-  // 2단계: 그래도 들어온 입력(취소할 수 없는 조합 입력)은 문서에 반영하지 않는다.
+  // contenteditable이 꺼져 있으면 브라우저가 이 영역을 편집 대상으로 보지 않으므로 그 경로도,
+  // IME 조합도 시작되지 않는다. 즉 막아야 할 입력이 애초에 만들어지지 않는다. vim 명령이
+  // 만드는 편집은 view.dispatch로 들어오므로 영향이 없다.
   //
-  // 주의: @replit/codemirror-vim은 IME 조합을 vim 키 입력으로 변환하는 자체
-  // inputHandler를 갖고 있다(라이브러리 소스의 `useNextTextInput` 처리, forceEndComposition
-  // 참고). extensions 배열에서 이 가드를 vim() 뒤에 둬야 한다 — CM6는 inputHandler들을
-  // 등록 순서대로 .some()으로 실행해 먼저 true를 반환한 쪽에서 멈추므로, 이 가드가 먼저
-  // 오면 라이브러리의 조합 처리 로직이 아예 실행되지 못한다.
-  const blockInputOutsideInsertMode = EditorView.inputHandler.of((view) => {
-    if (!outsideInsertMode(view)) return false;
-    // 조합 중에는 CodeMirror가 화면에 그려진 조합 문자를 일부러 남겨둔다(DocView.update가
-    // 조합 범위는 다시 그리지 않는다). 그래서 입력을 무시하기만 하면 글자가 화면에 남아
-    // 있다가, IME가 조합을 끝낼 때(다음 키 입력이나 IME 타임아웃) 뒤늦게야 사라진다.
-    // 조합을 먼저 끝내고 화면을 문서 상태대로 다시 그려서 곧바로 지운다.
-    if (view.compositionStarted) {
-      view.contentDOM.dispatchEvent(new CompositionEvent("compositionend"));
-      Promise.resolve().then(() => {
-        if (view.dom.isConnected) view.update([]);
-      });
-    }
-    return true;
-  });
-
-  // 3단계(가장 확실한 방어선): Normal/Visual 모드에서는 편집 영역의 contenteditable을 꺼 둔다.
-  //
-  // 1·2단계만으로 부족한 이유: vim 키맵은 "자기가 처리한" 키의 keydown에만
-  // preventDefault를 건다(라이브러리 handleKey는 result가 참일 때만 막는다). 그래서 vim이
-  // 처리하지 못한 키는 keydown이 막히지 않은 채 브라우저의 기본 문자 삽입 경로로 흘러간다.
-  // 단일 키는 대부분 vim이 가져가지만, `@7`·`Vp`처럼 두 번째 키에서 처리에 실패하는 조합이
-  // 실제로 존재한다(vim을 배우는 중이라면 이런 어중간한 조합을 수시로 누르게 된다).
-  // 그 뒤를 beforeinput 취소에만 의존하는 건 위태롭다 — 취소 가능 여부와 취소가 실제로
-  // 먹히는지는 브라우저·입력기마다 다르고, IME 조합이 만드는 insertCompositionText는
-  // 애초에 취소할 수 없는 이벤트다.
-  //
-  // contenteditable이 꺼져 있으면 브라우저가 이 영역을 편집 대상으로 보지 않으므로 기본
-  // 삽입 경로도, IME 조합 자체도 시작되지 않는다. 즉 막아야 할 입력이 만들어지지 않는다.
-  // vim 명령이 만드는 편집은 view.dispatch로 들어오므로 영향을 받지 않는다.
-  //
-  // EditorView.editable 대신 contentAttributes로 속성만 덮어쓰는 이유: editable 파셋을
-  // 끄면 CodeMirror가 선택 영역 그리기·포커스 처리·마우스 선택까지 다르게 동작한다.
-  // 여기서 닫고 싶은 건 브라우저의 편집 경로 하나뿐이라 DOM 속성만 바꾼다.
-  // contenteditable이 아닌 요소는 기본적으로 포커스를 받지 못하므로 tabindex를 함께 준다.
+  // EditorView.editable 파셋 대신 DOM 속성만 덮어쓴다. 파셋을 끄면 CodeMirror의 선택 영역
+  // 그리기·포커스 처리·마우스 선택까지 달라지는데, 닫고 싶은 건 브라우저의 편집 경로 하나뿐이다.
+  // 이 함수는 뷰가 갱신될 때마다 다시 평가되므로 모드 전환을 그대로 따라간다.
+  // contenteditable이 아닌 요소는 포커스를 받지 못하므로 tabindex를 함께 준다.
   const editableOnlyInInsertMode = EditorView.contentAttributes.of((view) => ({
-    contenteditable: outsideInsertMode(view) ? "false" : "true",
+    // vim이 아직/영영 붙지 않았으면 막는 쪽으로 둔다 — vim 없이 자유롭게 타이핑되는 게
+    // 맞는 경우는 없다.
+    contenteditable: getCM(view)?.state?.vim?.insertMode ? "true" : "false",
     tabindex: "0",
   }));
 
-  // 위 속성은 CodeMirror가 뷰를 갱신할 때 다시 계산된다. 모드 전환 직후 바로 반영되도록
-  // 빈 트랜잭션을 흘려보낸다. vim-mode-change는 cm.operation() 안에서 발생하므로 진행 중인
-  // 업데이트에 끼어들지 않게 마이크로태스크로 미룬다(사람이 그 사이에 키를 누를 수는 없다).
-  // vim이 붙지 못했는지 확인한다. 붙지 못하면 키맵이 없어 vim 명령이 하나도 듣지 않는데,
-  // CodeMirror는 콘솔 경고만 남기고 조용히 계속 동작하므로 사용자는 "왜 안 되지"만 겪는다.
-  // 조용히 망가지는 대신 상태줄로 드러낸다.
+  // vim이 붙지 못하면 키맵이 없어 vim 명령이 하나도 듣지 않는데, CodeMirror는 콘솔 경고만
+  // 남기고 조용히 계속 동작한다(PluginInstance.update의 try/catch). 상태줄로 드러낸다.
   function assertVimAttached(view: EditorView, fail: (message: string) => void) {
     if (getCM(view)?.state?.vim) return true;
     fail("vim 확장을 불러오지 못했습니다. 페이지를 새로고침해 주세요.");
     return false;
-  }
-
-  function syncEditableWithVimMode(view: EditorView) {
-    const cm = getCM(view);
-    if (!cm) return;
-    cm.on("vim-mode-change", () => {
-      Promise.resolve().then(() => {
-        if (!view.dom.isConnected) return;
-        const hadFocus = view.hasFocus;
-        view.dispatch({});
-        // contenteditable이 꺼지는 순간 포커스를 놓는 브라우저가 있어 되돌려준다.
-        if (hadFocus && !view.hasFocus) view.focus();
-      });
-    });
   }
 
   // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
@@ -324,19 +253,9 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
 
     const view = new EditorView({
       doc: "",
-      extensions: [
-        vim({ status: true }),
-        editableOnlyInInsertMode,
-        blockBeforeInputOutsideInsertMode,
-        blockInputOutsideInsertMode,
-        basicSetup,
-        EditorView.lineWrapping,
-        theme,
-      ],
+      extensions: [vim({ status: true }), editableOnlyInInsertMode, basicSetup, EditorView.lineWrapping, theme],
       parent: host,
     });
-
-    syncEditableWithVimMode(view);
 
     const st: TerminalState = { fileName, originalContent: "", savedContent: "", statusEl };
     terminalStates.set(view, st);
