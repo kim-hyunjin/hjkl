@@ -1,5 +1,5 @@
 ---
-import "@fontsource/jetbrains-mono/400.css";
+import TerminalShell from "./TerminalShell.astro";
 
 interface Props {
   /** 에디터에 채울 초기 버퍼 텍스트 */
@@ -17,245 +17,49 @@ const { initialContent, expected, entryId, title = "vim 연습장", label = "문
 const fileName = `${entryId}.txt`;
 ---
 
-<section class="mt-8" aria-label={`${title} ${label}`}>
-  <h2 class="mb-3 text-lg font-bold">{label}</h2>
-
-  <div
-    class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
-    data-problem-terminal
-    data-entry-id={entryId}
-    data-filename={fileName}
-  >
-    <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground">
-      <span class="size-[11px] rounded-full bg-[#f85149]"></span>
-      <span class="size-[11px] rounded-full bg-[#d29922]"></span>
-      <span class="size-[11px] rounded-full bg-[#3fb950]"></span>
-      <span class="ml-1">{fileName}</span>
-    </div>
-    <div class="relative h-[480px] overflow-hidden max-[760px]:h-80">
-      <div class="practice-editor h-full"></div>
-    </div>
-    <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground">
-      <span class="truncate">{fileName}</span>
-      <span
-        class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error"
-        data-practice-status
-      >초기화 중</span>
-    </div>
-    <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-2">
-      <span
-        class="min-h-[1.25em] flex-1 text-sm data-[kind=success]:text-success data-[kind=error]:text-error"
-        data-submit-message
-      ></span>
-      <button
-        type="button"
-        class="shrink-0 rounded-md border border-border px-4 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-background"
-        data-reset-button
-      >초기화</button>
-      <button
-        type="button"
-        class="shrink-0 rounded-md bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
-        data-submit-button
-      >제출</button>
-    </div>
-    <textarea data-initial-content class="hidden" tabindex="-1" aria-hidden="true">{initialContent}</textarea>
-    <textarea data-expected class="hidden" tabindex="-1" aria-hidden="true">{expected}</textarea>
+<TerminalShell
+  title={title}
+  label={label}
+  fileName={fileName}
+  rootAttrs={{ "data-problem-terminal": "", "data-entry-id": entryId, "data-filename": fileName }}
+>
+  <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-2">
+    <span
+      class="min-h-[1.25em] flex-1 text-sm data-[kind=success]:text-success data-[kind=error]:text-error"
+      data-submit-message
+    ></span>
+    <button
+      type="button"
+      class="shrink-0 rounded-md border border-border px-4 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-background"
+      data-reset-button
+    >초기화</button>
+    <button
+      type="button"
+      class="shrink-0 rounded-md bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+      data-submit-button
+    >제출</button>
   </div>
-</section>
+  <textarea data-initial-content class="hidden" tabindex="-1" aria-hidden="true">{initialContent}</textarea>
+  <textarea data-expected class="hidden" tabindex="-1" aria-hidden="true">{expected}</textarea>
+</TerminalShell>
 
 <script>
-  import { basicSetup, EditorView } from "codemirror";
-  import { vim, Vim, getCM, type CodeMirror } from "@replit/codemirror-vim";
+  import type { EditorView } from "codemirror";
   import { markComplete } from "../scripts/progress";
+  import {
+    createVimEditorView,
+    registerTerminalState,
+    setStatus,
+    assertVimAttached,
+    type BaseTerminalState,
+  } from "../scripts/vim-editor";
 
-  interface TerminalState {
-    fileName: string;
-    originalContent: string;
-    savedContent: string;
+  interface TerminalState extends BaseTerminalState {
     expected: string;
     entryId: string;
     keystrokes: number;
-    statusEl: HTMLElement;
     messageEl: HTMLElement;
   }
-
-  const terminalStates = new Map<EditorView, TerminalState>();
-
-  function downloadFile(name: string, content: string) {
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  const setStatus = (st: TerminalState, text: string, kind: "idle" | "loading" | "ready" | "error" | "done" = "idle") => {
-    st.statusEl.textContent = text;
-    st.statusEl.dataset.kind = kind;
-  };
-
-  function stateOf(cm: CodeMirror): TerminalState | undefined {
-    const view = (cm as any).cm6 as EditorView | undefined;
-    return view ? terminalStates.get(view) : undefined;
-  }
-
-  function saveWith(cm: CodeMirror, argString: string | undefined, message: (name: string) => string) {
-    const st = stateOf(cm);
-    if (!st) return;
-    const name = argString?.trim().split(/\s+/)[0] || st.fileName;
-    downloadFile(name, cm.getValue());
-    st.savedContent = cm.getValue();
-    setStatus(st, message(name), "done");
-  }
-
-  Vim.defineEx("write", "w", (cm, params) => saveWith(cm, params.argString, (n) => `저장됨: ${n}`));
-  Vim.defineEx("wq", "wq", (cm, params) => saveWith(cm, params.argString, (n) => `저장 후 종료: ${n}`));
-  Vim.defineEx("xit", "x", (cm, params) => saveWith(cm, params.argString, (n) => `저장 후 종료: ${n}`));
-
-  Vim.defineEx("quit", "q", (cm, params) => {
-    const st = stateOf(cm);
-    if (!st) return;
-    if (params.args?.includes("!")) {
-      cm.setValue(st.originalContent);
-      st.savedContent = st.originalContent;
-      setStatus(st, "종료됨 (변경 사항 버림)", "done");
-      return;
-    }
-    if (cm.getValue() !== st.savedContent) {
-      setStatus(st, "E37: 저장되지 않은 변경 사항이 있습니다 (:q! 로 강제 종료)", "error");
-    } else {
-      setStatus(st, "종료됨", "done");
-    }
-  });
-
-  Vim.mapCommand("ZZ", "keyToEx", "", undefined, { exArgs: { input: "wq" } });
-
-  // 시스템 클립보드 레지스터(`"+`)의 붙여넣기를 고친다.
-  //
-  // 라이브러리(vim-core의 actions.paste)는 `"+p`에서 navigator.clipboard.readText()를
-  // 그대로 호출하고 결과를 기다리기만 한다. 그런데 브라우저에서 이 API는
-  //  - Chrome: 읽기 권한이 필요하고, 권한 프롬프트에 응답이 없으면 promise가 영영
-  //    pending으로 남는다 → `"+p`가 아무 일도 일어나지 않은 채 끝난다
-  //  - Firefox/Safari: 웹 페이지에 readText가 아예 없다 → 호출 자체가 실패한다
-  // 어느 쪽이든 실패가 사용자에게 전혀 보이지 않는다. 그래서 기다림에 시간 제한을 두고,
-  // 못 읽으면 에디터가 들고 있는 `+` 레지스터 사본으로 붙여넣은 뒤 상태줄로 알린다.
-  //
-  // 복사(`"+y`)는 원래 동작한다. 라이브러리가 레지스터와 OS 클립보드에 함께 쓰고,
-  // writeText는 키 입력의 user activation 덕에 권한 없이도 성공한다. 그래서 이 사이트
-  // 안에서의 `"+y` → `"+p`는 클립보드 권한이 없어도 항상 제대로 동작하게 된다.
-  const CLIPBOARD_READ_TIMEOUT_MS = 500;
-
-  function readSystemClipboard(): Promise<string | null> {
-    const clipboard = navigator.clipboard;
-    if (!clipboard?.readText) return Promise.resolve(null);
-    let pending: Promise<string>;
-    try {
-      pending = clipboard.readText();
-    } catch {
-      return Promise.resolve(null);
-    }
-    return Promise.race([
-      pending.catch(() => null),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), CLIPBOARD_READ_TIMEOUT_MS)),
-    ]);
-  }
-
-  // this는 라이브러리의 actions 객체다(actions[command.action](...)로 호출된다).
-  // 붙여넣기 본체인 continuePaste는 거기 들어 있어서 그대로 위임한다.
-  Vim.defineAction("paste", function (this: any, cm, actionArgs, vim) {
-    const actions = this;
-    const register = Vim.getRegisterController().getRegister(actionArgs.registerName);
-
-    if (actionArgs.registerName !== "+") {
-      actions.continuePaste(cm, actionArgs, vim, register.toString(), register);
-      return;
-    }
-
-    readSystemClipboard().then((clipboardText) => {
-      if (clipboardText) {
-        actions.continuePaste(cm, actionArgs, vim, clipboardText, register);
-        return;
-      }
-      const ownCopy = register.toString();
-      const st = stateOf(cm as unknown as CodeMirror);
-      if (st) {
-        setStatus(
-          st,
-          ownCopy
-            ? '시스템 클립보드를 읽을 수 없어 에디터 안의 "+ 레지스터를 붙여넣었습니다'
-            : '시스템 클립보드를 읽을 수 없습니다 ("+y로 먼저 복사해보세요)',
-        );
-      }
-      if (ownCopy) actions.continuePaste(cm, actionArgs, vim, ownCopy, register);
-    });
-  });
-
-  // 라이브러리 기본값은 pcre(JavaScript 정규식)라 강의에서 가르치는 vim 정규식
-  // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
-  Vim.setOption("pcre", false);
-
-  // Normal/Visual 모드에서는 편집 영역의 contenteditable을 꺼 둔다.
-  //
-  // vim 키맵은 자기가 처리한 키의 keydown에만 preventDefault를 건다(라이브러리 handleKey는
-  // result가 참일 때만 막는다). 그래서 vim이 처리하지 못한 키는 keydown이 막히지 않은 채
-  // 브라우저의 기본 문자 삽입 경로로 흘러간다 — 단일 키는 대부분 vim이 가져가지만
-  // `@7`, `Vp`처럼 두 번째 키에서 처리에 실패하는 조합이 실제로 있다.
-  //
-  // contenteditable이 꺼져 있으면 브라우저가 이 영역을 편집 대상으로 보지 않으므로 그 경로도,
-  // IME 조합도 시작되지 않는다. 즉 막아야 할 입력이 애초에 만들어지지 않는다. vim 명령이
-  // 만드는 편집은 view.dispatch로 들어오므로 영향이 없다.
-  //
-  // EditorView.editable 파셋 대신 DOM 속성만 덮어쓴다. 파셋을 끄면 CodeMirror의 선택 영역
-  // 그리기·포커스 처리·마우스 선택까지 달라지는데, 닫고 싶은 건 브라우저의 편집 경로 하나뿐이다.
-  // 이 함수는 뷰가 갱신될 때마다 다시 평가되므로 모드 전환을 그대로 따라간다.
-  // contenteditable이 아닌 요소는 포커스를 받지 못하므로 tabindex를 함께 준다.
-  const editableOnlyInInsertMode = EditorView.contentAttributes.of((view) => ({
-    // vim이 아직/영영 붙지 않았으면 막는 쪽으로 둔다 — vim 없이 자유롭게 타이핑되는 게
-    // 맞는 경우는 없다.
-    contenteditable: getCM(view)?.state?.vim?.insertMode ? "true" : "false",
-    tabindex: "0",
-  }));
-
-  // vim이 붙지 못하면 키맵이 없어 vim 명령이 하나도 듣지 않는데, CodeMirror는 콘솔 경고만
-  // 남기고 조용히 계속 동작한다(PluginInstance.update의 try/catch). 상태줄로 드러낸다.
-  function assertVimAttached(view: EditorView, fail: (message: string) => void) {
-    if (getCM(view)?.state?.vim) return true;
-    fail("vim 확장을 불러오지 못했습니다. 페이지를 새로고침해 주세요.");
-    return false;
-  }
-
-  // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
-  // 레이아웃·폰트까지 전부 여기서 준다. height 100%가 빠지면 에디터가 내용 높이(2~3줄)만큼만
-  // 차지해서, 480px 컨테이너의 나머지가 클릭해도 반응하지 않는 죽은 영역이 된다.
-  const theme = EditorView.theme({
-    "&": { height: "100%", fontSize: "15px", background: "#0d1117", color: "#c9d1d9" },
-    "&.cm-focused": { outline: "none" },
-    // Normal 모드 블록 커서는 빈 줄에서 채울 문자가 없으면 NBSP(U+00A0)를 그 자리에
-    // 그려 넣는다(라이브러리 내부 동작, 커서 폭을 유지하기 위함). 이 글자의 실제
-    // 렌더링은 폰트에 달려 있어서, OS 시스템 폰트에 기대면(SFMono/Menlo는 macOS
-    // 전용이라 다른 OS에서는 임의의 monospace로 대체된다) 일부 폰트에서 그 자리에
-    // 점·상자 같은 게 보일 수 있다. 웹폰트를 번들해 항상 같은 폰트로 렌더링한다.
-    ".cm-scroller": { fontFamily: '"JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, monospace', lineHeight: "1.6" },
-    ".cm-content": { caretColor: "#f0f6fc" },
-    ".cm-cursor, .cm-dropCursor": { borderLeftColor: "#f0f6fc" },
-    ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, & ::selection": { backgroundColor: "#264f78 !important" },
-    ".cm-activeLine": { backgroundColor: "rgba(110,118,129,0.12)" },
-    ".cm-activeLineGutter": { backgroundColor: "rgba(110,118,129,0.12)" },
-    ".cm-gutters": { background: "#0d1117", color: "#8b949e", border: "none" },
-    ".cm-lineNumbers .cm-gutterElement": { padding: "0 8px 0 12px" },
-    ".cm-searchMatch": { outline: "1px solid #f0c674 !important", background: "transparent" },
-    ".cm-vim-panel": {
-      background: "#161b22",
-      borderTop: "1px solid #30363d",
-      color: "#8b949e",
-      padding: "2px 10px",
-      minHeight: "1.5em",
-    },
-  });
 
   // 줄 끝 공백과 파일 끝의 개행 차이는 무시하는 느슨한 비교. 들여쓰기(줄 앞 공백)는
   // 문제(예: 재정렬 챌린지)의 정답 조건일 수 있으므로 그대로 비교한다.
@@ -306,13 +110,9 @@ const fileName = `${entryId}.txt`;
     const entryId = root.dataset.entryId || "";
     const content = initialContentEl.value;
 
-    const view = new EditorView({
-      doc: content,
-      extensions: [vim({ status: true }), editableOnlyInInsertMode, basicSetup, EditorView.lineWrapping, theme],
-      parent: host,
-    });
+    const view = createVimEditorView(host, content);
 
-    const st: TerminalState = {
+    const st = registerTerminalState<TerminalState>(view, {
       fileName,
       originalContent: content,
       savedContent: content,
@@ -321,8 +121,7 @@ const fileName = `${entryId}.txt`;
       keystrokes: 0,
       statusEl,
       messageEl,
-    };
-    terminalStates.set(view, st);
+    });
     if (!assertVimAttached(view, (message) => setStatus(st, message, "error"))) return;
     setStatus(st, `로드됨: ${fileName}`, "ready");
     view.focus();

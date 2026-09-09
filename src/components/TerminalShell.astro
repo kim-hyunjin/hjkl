@@ -1,0 +1,39 @@
+---
+import "@fontsource/jetbrains-mono/400.css";
+
+interface Props {
+  /** 랜드마크 이름에 쓰이는 강의·문제 제목 */
+  title?: string;
+  label: string;
+  /** 창 헤더/상태 표시줄에 보여줄 파일명 */
+  fileName: string;
+  /** 루트 컨테이너에 얹을 data-* 속성 (예: data-problem-terminal, data-entry-id) */
+  rootAttrs?: Record<string, string>;
+}
+
+const { title = "vim 연습장", label, fileName, rootAttrs = {} } = Astro.props;
+---
+
+<section class="mt-8" aria-label={`${title} ${label}`}>
+  <h2 class="mb-3 text-lg font-bold">{label}</h2>
+
+  <div class="overflow-hidden rounded-lg border border-border bg-black shadow-[0_8px_24px_rgba(0,0,0,0.35)]" {...rootAttrs}>
+    <div class="flex items-center gap-2 border-b border-border bg-muted px-3.5 py-2 font-mono text-xs text-muted-foreground">
+      <span class="size-[11px] rounded-full bg-[#f85149]"></span>
+      <span class="size-[11px] rounded-full bg-[#d29922]"></span>
+      <span class="size-[11px] rounded-full bg-[#3fb950]"></span>
+      <span class="ml-1">{fileName}</span>
+    </div>
+    <div class="relative h-[480px] overflow-hidden max-[760px]:h-80">
+      <div class="practice-editor h-full"></div>
+    </div>
+    <div class="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-1.5 font-mono text-xs text-muted-foreground">
+      <span class="truncate">{fileName}</span>
+      <span
+        class="shrink-0 data-[kind=loading]:text-warning data-[kind=ready]:text-success data-[kind=error]:text-error"
+        data-practice-status
+      >초기화 중</span>
+    </div>
+    <slot />
+  </div>
+</section>
