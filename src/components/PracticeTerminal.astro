@@ -107,10 +107,27 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
   Vim.setOption("pcre", false);
 
+  // vim이 아직 붙지 않았으면(초기화 전) 아무것도 막지 않는다.
+  function outsideInsertMode(view: EditorView) {
+    const vimState = getCM(view)?.state?.vim;
+    return !!vimState && !vimState.insertMode;
+  }
+
   // Normal/Visual 모드에서 DOM으로 직접 들어오는 입력을 무시한다.
   // 키 이벤트는 vim 키맵이 가로채지만 일부 DOM 입력은 keydown 없이 도착해 vim
   // 키맵을 지나치므로, Normal 모드인데도 글자가 삽입될 수 있다. vim 명령이 만드는
-  // 편집은 view.dispatch로 들어와 이 핸들러를 타지 않는다.
+  // 편집은 view.dispatch로 들어와 이 핸들러들을 타지 않는다.
+  //
+  // 1단계: 브라우저가 편집 영역을 고치기 전에 beforeinput을 취소한다. inputHandler는
+  // 브라우저가 이미 글자를 넣은 뒤에 불리므로, 그것만으로는 글자가 한 번 화면에 그려지는
+  // 것 자체를 막을 수 없다. 여기서 취소하면 애초에 DOM에 들어오지 않는다.
+  const blockBeforeInputOutsideInsertMode = EditorView.domEventHandlers({
+    // 취소할 수 없는 이벤트(IME 조합 중에 오는 insertCompositionText)까지 true를 반환하면
+    // CodeMirror의 beforeinput 처리만 건너뛸 뿐 입력은 그대로 들어온다. 그건 2단계가 맡는다.
+    beforeinput: (event, view) => event.cancelable && outsideInsertMode(view),
+  });
+
+  // 2단계: 그래도 들어온 입력(취소할 수 없는 조합 입력)은 문서에 반영하지 않는다.
   //
   // 주의: @replit/codemirror-vim은 IME 조합을 vim 키 입력으로 변환하는 자체
   // inputHandler를 갖고 있다(라이브러리 소스의 `useNextTextInput` 처리, forceEndComposition
@@ -118,8 +135,18 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
   // 등록 순서대로 .some()으로 실행해 먼저 true를 반환한 쪽에서 멈추므로, 이 가드가 먼저
   // 오면 라이브러리의 조합 처리 로직이 아예 실행되지 못한다.
   const blockInputOutsideInsertMode = EditorView.inputHandler.of((view) => {
-    const vimState = getCM(view)?.state?.vim;
-    return !!vimState && !vimState.insertMode;
+    if (!outsideInsertMode(view)) return false;
+    // 조합 중에는 CodeMirror가 화면에 그려진 조합 문자를 일부러 남겨둔다(DocView.update가
+    // 조합 범위는 다시 그리지 않는다). 그래서 입력을 무시하기만 하면 글자가 화면에 남아
+    // 있다가, IME가 조합을 끝낼 때(다음 키 입력이나 IME 타임아웃) 뒤늦게야 사라진다.
+    // 조합을 먼저 끝내고 화면을 문서 상태대로 다시 그려서 곧바로 지운다.
+    if (view.compositionStarted) {
+      view.contentDOM.dispatchEvent(new CompositionEvent("compositionend"));
+      Promise.resolve().then(() => {
+        if (view.dom.isConnected) view.update([]);
+      });
+    }
+    return true;
   });
 
   // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
@@ -178,7 +205,14 @@ const { file, title = "vim 연습장", label = "실습" } = Astro.props;
 
     const view = new EditorView({
       doc: "",
-      extensions: [vim({ status: true }), blockInputOutsideInsertMode, basicSetup, EditorView.lineWrapping, theme],
+      extensions: [
+        vim({ status: true }),
+        blockBeforeInputOutsideInsertMode,
+        blockInputOutsideInsertMode,
+        basicSetup,
+        EditorView.lineWrapping,
+        theme,
+      ],
       parent: host,
     });
 
