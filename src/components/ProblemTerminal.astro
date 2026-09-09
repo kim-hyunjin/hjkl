@@ -134,14 +134,91 @@ const fileName = `${entryId}.txt`;
 
   Vim.mapCommand("ZZ", "keyToEx", "", undefined, { exArgs: { input: "wq" } });
 
+  // 시스템 클립보드 레지스터(`"+`)의 붙여넣기를 고친다.
+  //
+  // 라이브러리(vim-core의 actions.paste)는 `"+p`에서 navigator.clipboard.readText()를
+  // 그대로 호출하고 결과를 기다리기만 한다. 그런데 브라우저에서 이 API는
+  //  - Chrome: 읽기 권한이 필요하고, 권한 프롬프트에 응답이 없으면 promise가 영영
+  //    pending으로 남는다 → `"+p`가 아무 일도 일어나지 않은 채 끝난다
+  //  - Firefox/Safari: 웹 페이지에 readText가 아예 없다 → 호출 자체가 실패한다
+  // 어느 쪽이든 실패가 사용자에게 전혀 보이지 않는다. 그래서 기다림에 시간 제한을 두고,
+  // 못 읽으면 에디터가 들고 있는 `+` 레지스터 사본으로 붙여넣은 뒤 상태줄로 알린다.
+  //
+  // 복사(`"+y`)는 원래 동작한다. 라이브러리가 레지스터와 OS 클립보드에 함께 쓰고,
+  // writeText는 키 입력의 user activation 덕에 권한 없이도 성공한다. 그래서 이 사이트
+  // 안에서의 `"+y` → `"+p`는 클립보드 권한이 없어도 항상 제대로 동작하게 된다.
+  const CLIPBOARD_READ_TIMEOUT_MS = 500;
+
+  function readSystemClipboard(): Promise<string | null> {
+    const clipboard = navigator.clipboard;
+    if (!clipboard?.readText) return Promise.resolve(null);
+    let pending: Promise<string>;
+    try {
+      pending = clipboard.readText();
+    } catch {
+      return Promise.resolve(null);
+    }
+    return Promise.race([
+      pending.catch(() => null),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), CLIPBOARD_READ_TIMEOUT_MS)),
+    ]);
+  }
+
+  // this는 라이브러리의 actions 객체다(actions[command.action](...)로 호출된다).
+  // 붙여넣기 본체인 continuePaste는 거기 들어 있어서 그대로 위임한다.
+  Vim.defineAction("paste", function (this: any, cm, actionArgs, vim) {
+    const actions = this;
+    const register = Vim.getRegisterController().getRegister(actionArgs.registerName);
+
+    if (actionArgs.registerName !== "+") {
+      actions.continuePaste(cm, actionArgs, vim, register.toString(), register);
+      return;
+    }
+
+    readSystemClipboard().then((clipboardText) => {
+      if (clipboardText) {
+        actions.continuePaste(cm, actionArgs, vim, clipboardText, register);
+        return;
+      }
+      const ownCopy = register.toString();
+      const st = stateOf(cm as unknown as CodeMirror);
+      if (st) {
+        setStatus(
+          st,
+          ownCopy
+            ? '시스템 클립보드를 읽을 수 없어 에디터 안의 "+ 레지스터를 붙여넣었습니다'
+            : '시스템 클립보드를 읽을 수 없습니다 ("+y로 먼저 복사해보세요)',
+        );
+      }
+      if (ownCopy) actions.continuePaste(cm, actionArgs, vim, ownCopy, register);
+    });
+  });
+
   // 라이브러리 기본값은 pcre(JavaScript 정규식)라 강의에서 가르치는 vim 정규식
   // (`\<단어\>`, `\+`, `\(...\)`, `\v` 등)이 그대로 동작하지 않는다. vim 문법으로 맞춘다.
   Vim.setOption("pcre", false);
 
+  // vim이 아직 붙지 않았으면(초기화 전) 아무것도 막지 않는다.
+  function outsideInsertMode(view: EditorView) {
+    const vimState = getCM(view)?.state?.vim;
+    return !!vimState && !vimState.insertMode;
+  }
+
   // Normal/Visual 모드에서 DOM으로 직접 들어오는 입력을 무시한다.
   // 키 이벤트는 vim 키맵이 가로채지만 일부 DOM 입력은 keydown 없이 도착해 vim
   // 키맵을 지나치므로, Normal 모드인데도 글자가 삽입될 수 있다. vim 명령이 만드는
-  // 편집은 view.dispatch로 들어와 이 핸들러를 타지 않는다.
+  // 편집은 view.dispatch로 들어와 이 핸들러들을 타지 않는다.
+  //
+  // 1단계: 브라우저가 편집 영역을 고치기 전에 beforeinput을 취소한다. inputHandler는
+  // 브라우저가 이미 글자를 넣은 뒤에 불리므로, 그것만으로는 글자가 한 번 화면에 그려지는
+  // 것 자체를 막을 수 없다. 여기서 취소하면 애초에 DOM에 들어오지 않는다.
+  const blockBeforeInputOutsideInsertMode = EditorView.domEventHandlers({
+    // 취소할 수 없는 이벤트(IME 조합 중에 오는 insertCompositionText)까지 true를 반환하면
+    // CodeMirror의 beforeinput 처리만 건너뛸 뿐 입력은 그대로 들어온다. 그건 2단계가 맡는다.
+    beforeinput: (event, view) => event.cancelable && outsideInsertMode(view),
+  });
+
+  // 2단계: 그래도 들어온 입력(취소할 수 없는 조합 입력)은 문서에 반영하지 않는다.
   //
   // 주의: @replit/codemirror-vim은 IME 조합을 vim 키 입력으로 변환하는 자체
   // inputHandler를 갖고 있다(라이브러리 소스의 `useNextTextInput` 처리, forceEndComposition
@@ -149,8 +226,18 @@ const fileName = `${entryId}.txt`;
   // 등록 순서대로 .some()으로 실행해 먼저 true를 반환한 쪽에서 멈추므로, 이 가드가 먼저
   // 오면 라이브러리의 조합 처리 로직이 아예 실행되지 못한다.
   const blockInputOutsideInsertMode = EditorView.inputHandler.of((view) => {
-    const vimState = getCM(view)?.state?.vim;
-    return !!vimState && !vimState.insertMode;
+    if (!outsideInsertMode(view)) return false;
+    // 조합 중에는 CodeMirror가 화면에 그려진 조합 문자를 일부러 남겨둔다(DocView.update가
+    // 조합 범위는 다시 그리지 않는다). 그래서 입력을 무시하기만 하면 글자가 화면에 남아
+    // 있다가, IME가 조합을 끝낼 때(다음 키 입력이나 IME 타임아웃) 뒤늦게야 사라진다.
+    // 조합을 먼저 끝내고 화면을 문서 상태대로 다시 그려서 곧바로 지운다.
+    if (view.compositionStarted) {
+      view.contentDOM.dispatchEvent(new CompositionEvent("compositionend"));
+      Promise.resolve().then(() => {
+        if (view.dom.isConnected) view.update([]);
+      });
+    }
+    return true;
   });
 
   // CodeMirror가 런타임에 만드는 DOM은 Astro의 스코프 CSS(`data-astro-cid-*`)가 닿지 않으므로
@@ -233,7 +320,14 @@ const fileName = `${entryId}.txt`;
 
     const view = new EditorView({
       doc: content,
-      extensions: [vim({ status: true }), blockInputOutsideInsertMode, basicSetup, EditorView.lineWrapping, theme],
+      extensions: [
+        vim({ status: true }),
+        blockBeforeInputOutsideInsertMode,
+        blockInputOutsideInsertMode,
+        basicSetup,
+        EditorView.lineWrapping,
+        theme,
+      ],
       parent: host,
     });
 
